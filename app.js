@@ -278,7 +278,7 @@ SCREENS['login'] = () => `
       <div style="flex:1;">
         <div style="margin-bottom:32px; text-align:center; padding-top:16px;">
           <div style="width:52px; height:52px; background:var(--s2b-teal-light); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;">${icon('shield-check', 28, 'var(--s2b-teal)')}</div>
-          <div style="font-size:26px; font-weight:800; color:var(--s2b-blue);">Welcome Back</div>
+          <div style="font-size:26px; font-weight:800; color:var(--s2b-blue);">Welcome</div>
           <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Sign in to your Safe2Bite account</div>
         </div>
         <div class="input-group">
@@ -3767,7 +3767,7 @@ SCREENS['error-invalid-login'] = () => `
     <div style="padding:20px 28px 40px;">
       <div style="margin-bottom:32px; text-align:center; padding-top:16px;">
         <div style="width:52px; height:52px; background:var(--s2b-teal-light); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;">${icon('shield-check', 28, 'var(--s2b-teal)')}</div>
-        <div style="font-size:26px; font-weight:800; color:var(--s2b-blue);">Welcome Back</div>
+        <div style="font-size:26px; font-weight:800; color:var(--s2b-blue);">Welcome</div>
         <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Sign in to your Safe2Bite account</div>
       </div>
       <div class="input-group">
