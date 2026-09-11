@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safe2Bite — Mobile App Wireframe · Pass 3 Review Baseline</title>
+  <meta name="description"
+    content="Safe2Bite Food Allergy Care — Mobile Application Wireframe. Pass 3 review baseline with Pass 2 onboarding/authentication and Pass 3 Today Dashboard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div id="viewer-shell">
+    <aside id="screen-nav" aria-label="Screen Navigator">
+      <div class="screen-nav-header">
+        <div class="s2b-logo-small">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6L12 2z" fill="#00a5bb" />
+            <path d="M10 12.5l2 2 4-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+              fill="none" />
+          </svg>
+          <span>Safe2Bite</span>
+        </div>
+        <div class="nav-pass-badge">Pass 3</div>
+      </div>
+
+      <!-- ENTRY FLOW -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">ENTRY FLOW</div>
+        <button class="screen-nav-item active" onclick="showScreen('splash')" id="nav-splash">Splash Screen</button>
+        <button class="screen-nav-item" onclick="showScreen('onboarding-1')" id="nav-onboarding-1">Onboarding 1</button>
+        <button class="screen-nav-item" onclick="showScreen('onboarding-2')" id="nav-onboarding-2">Onboarding 2</button>
+        <button class="screen-nav-item" onclick="showScreen('onboarding-3')" id="nav-onboarding-3">Onboarding 3</button>
+        <button class="screen-nav-item" onclick="showScreen('role-select')" id="nav-role-select">Role Selection</button>
+      </div>
+
+      <!-- AUTHENTICATION -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">AUTHENTICATION</div>
+        <button class="screen-nav-item" onclick="showScreen('login')" id="nav-login">Login</button>
+        <button class="screen-nav-item" onclick="showScreen('create-account')" id="nav-create-account">Create
+          Account</button>
+        <button class="screen-nav-item" onclick="showScreen('email-verify')" id="nav-email-verify">Email
+          Verification</button>
+        <button class="screen-nav-item" onclick="showScreen('phone-verify')" id="nav-phone-verify">Phone
+          Verification</button>
+        <button class="screen-nav-item" onclick="showScreen('forgot-password')" id="nav-forgot-password">Forgot
+          Password</button>
+        <button class="screen-nav-item" onclick="showScreen('reset-email-sent')" id="nav-reset-email-sent">Reset Email
+          Sent</button>
+        <button class="screen-nav-item" onclick="showScreen('create-new-password')" id="nav-create-new-password">New
+          Password</button>
+        <button class="screen-nav-item" onclick="showScreen('password-updated')" id="nav-password-updated">Password
+          Updated</button>
+      </div>
+
+      <!-- PATIENT SETUP -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">PATIENT SETUP</div>
+        <button class="screen-nav-item" onclick="showScreen('patient-profile-setup')"
+          id="nav-patient-profile-setup">Profile Setup</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-contact-setup')"
+          id="nav-patient-contact-setup">Contact Info</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-emergency-contact')"
+          id="nav-patient-emergency-contact">Emergency Contact</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-consent')" id="nav-patient-consent">Consent &amp;
+          Privacy</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-notifications')"
+          id="nav-patient-notifications">Notifications</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-setup-complete')"
+          id="nav-patient-setup-complete">Setup Complete</button>
+      </div>
+
+      <!-- CAREGIVER SETUP -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">CAREGIVER SETUP</div>
+        <button class="screen-nav-item" onclick="showScreen('caregiver-intro')" id="nav-caregiver-intro">Caregiver
+          Intro</button>
+        <button class="screen-nav-item" onclick="showScreen('caregiver-who')" id="nav-caregiver-who">Who Are You Caring
+          For?</button>
+        <button class="screen-nav-item" onclick="showScreen('caregiver-add-patient')" id="nav-caregiver-add-patient">Add
+          Patient</button>
+        <button class="screen-nav-item" onclick="showScreen('caregiver-setup-complete')"
+          id="nav-caregiver-setup-complete">Caregiver Complete</button>
+      </div>
+
+      <!-- PATIENT ROLE -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">PATIENT ROLE — TODAY</div>
+        <button class="screen-nav-item" onclick="showScreen('patient-today')" id="nav-patient-today">Today (State B)</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-a')" id="nav-today-state-a">Today — State A</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-c')" id="nav-today-state-c">Today — State C</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-d')" id="nav-today-state-d">Today — State D</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-e')" id="nav-today-state-e">Today — State E</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-f')" id="nav-today-state-f">Today — State F</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-g')" id="nav-today-state-g">Today — State G</button>
+        <button class="screen-nav-item" onclick="showScreen('today-loading')" id="nav-today-loading">Today — Loading</button>
+        <button class="screen-nav-item" onclick="showScreen('today-error')" id="nav-today-error">Today — Error</button>
+      </div>
+
+      <!-- PATIENT ROLE — FLOWS -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">PATIENT ROLE — FLOWS</div>
+        <button class="screen-nav-item" onclick="showScreen('today-assessment-placeholder')" id="nav-assessment-placeholder">Assessment (Coming in Pass 4)</button>
+        <button class="screen-nav-item" onclick="showScreen('today-reaction-placeholder')" id="nav-reaction-placeholder">Reaction Check (Pass 6)</button>
+        <button class="screen-nav-item" onclick="showScreen('today-food-placeholder')" id="nav-food-placeholder">Food Intake (Pass 7)</button>
+        <button class="screen-nav-item" onclick="showScreen('today-emergency-placeholder')" id="nav-emergency-placeholder">Emergency Help</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-treatment')" id="nav-patient-treatment">Treatment</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-progress')" id="nav-patient-progress">Progress</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-care')" id="nav-patient-care">Care</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-profile')" id="nav-patient-profile">Profile</button>
+      </div>
+
+
+      <!-- CAREGIVER ROLE -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">CAREGIVER ROLE</div>
+        <button class="screen-nav-item" onclick="showScreen('caregiver-home')" id="nav-caregiver-home">My
+          Patients</button>
+        <button class="screen-nav-item" onclick="showScreen('caregiver-selected')" id="nav-caregiver-selected">Selected
+          Patient</button>
+      </div>
+
+      <!-- DOCTOR ROLE -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">DOCTOR ROLE</div>
+        <button class="screen-nav-item" onclick="showScreen('doctor-dashboard')"
+          id="nav-doctor-dashboard">Dashboard</button>
+        <button class="screen-nav-item" onclick="showScreen('doctor-patients')"
+          id="nav-doctor-patients">Patients</button>
+        <button class="screen-nav-item" onclick="showScreen('doctor-patient-profile')"
+          id="nav-doctor-patient-profile">Patient Profile</button>
+        <button class="screen-nav-item" onclick="showScreen('doctor-alerts')" id="nav-doctor-alerts">Alerts</button>
+        <button class="screen-nav-item" onclick="showScreen('doctor-messages')"
+          id="nav-doctor-messages">Messages</button>
+      </div>
+
+      <!-- SYSTEM STATES -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">SYSTEM STATES</div>
+        <button class="screen-nav-item" onclick="showScreen('error-invalid-login')" id="nav-error-invalid-login">Invalid
+          Login</button>
+        <button class="screen-nav-item" onclick="showScreen('error-invalid-code')" id="nav-error-invalid-code">Invalid
+          Code</button>
+        <button class="screen-nav-item" onclick="showScreen('error-account-exists')"
+          id="nav-error-account-exists">Account Exists</button>
+        <button class="screen-nav-item" onclick="showScreen('error-network')" id="nav-error-network">Network
+          Error</button>
+        <button class="screen-nav-item" onclick="showScreen('state-loading')" id="nav-state-loading">Loading
+          State</button>
+        <button class="screen-nav-item" onclick="showScreen('state-success')" id="nav-state-success">Success
+          State</button>
+      </div>
+
+      <!-- DESIGN SYSTEM -->
+      <div class="screen-nav-section">
+        <div class="screen-nav-section-title">DESIGN SYSTEM</div>
+        <button class="screen-nav-item" onclick="showScreen('design-system')" id="nav-design-system">Design
+          System</button>
+        <button class="screen-nav-item" onclick="showScreen('components')" id="nav-components">Components</button>
+        <button class="screen-nav-item" onclick="showScreen('sitemap')" id="nav-sitemap">Sitemap</button>
+        <button class="screen-nav-item" onclick="showScreen('user-flows')" id="nav-user-flows">User Flows</button>
+      </div>
+    </aside>
+    <main id="phone-viewport">
+      <div id="phone-frame">
+        <div class="phone-notch"></div>
+        <div id="phone-screen"></div>
+      </div>
+      <div id="screen-label"></div>
+    </main>
+    <aside id="info-panel" aria-label="Screen Information">
+      <div id="info-content"></div>
+    </aside>
+  </div>
+  <script src="assets/icons/icons.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
