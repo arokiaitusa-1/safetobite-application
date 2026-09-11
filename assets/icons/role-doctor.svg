@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#065f46" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+  <!-- Safe2Bite: Doctor / Care Team Role Icon -->
+  <!-- Use: Role selection, clinical context, provider badges -->
+  <!-- Person silhouette (left) + Medical cross badge (right) -->
+  <circle cx="9" cy="7.5" r="3.5"/>
+  <path d="M2.5 21c0-3.5 2.9-6.5 6.5-7"/>
+  <rect x="12.5" y="12.5" width="9" height="9" rx="1.5"/>
+  <line x1="17" y1="15" x2="17" y2="19"/>
+  <line x1="15" y1="17" x2="19" y2="17"/>
+</svg>
