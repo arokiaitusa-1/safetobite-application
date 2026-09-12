@@ -207,6 +207,7 @@ body {
   border: 2px solid #2a3441;
   position: relative;
   overflow: hidden;
+  transform: translateZ(0);
   box-shadow: 
     0 0 0 6px #1a2535,
     0 32px 80px rgba(0,0,0,0.7),
@@ -504,7 +505,14 @@ body {
   padding: 4px 10px;
   border-radius: 999px;
 }
-.status-badge.completed  { background: var(--s2b-success-bg); color: var(--s2b-success); }
+.status-badge.completed,
+.status-badge.taken      { background: var(--s2b-success-bg); color: var(--s2b-success); border: 1px solid #bbf7d0; }
+.status-badge.missed     { background: #fef2f2; color: var(--s2b-urgent); border: 1px solid #fecaca; font-weight: 700; }
+.status-badge.active,
+.status-badge.current,
+.status-badge.in-progress{ background: var(--s2b-teal-light); color: var(--s2b-teal-dark); border: 1px solid var(--s2b-teal-mid); }
+.status-badge.upcoming,
+.status-badge.pending    { background: #f1f5f9; color: var(--text-secondary); border: 1px solid var(--border-light); }
 .status-badge.attention  { background: var(--s2b-attention-bg); color: var(--s2b-attention); }
 .status-badge.warning    { background: var(--s2b-warning-bg); color: var(--s2b-warning); }
 .status-badge.urgent     { background: var(--s2b-urgent-bg); color: var(--s2b-urgent); }
@@ -747,9 +755,67 @@ body {
   text-align: center;
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-card);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
 }
-.stat-value { font-size: 22px; font-weight: 800; color: var(--s2b-blue); }
-.stat-label { font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+.stat-value { font-size: 22px; font-weight: 800; color: var(--s2b-blue); line-height: 1.1; }
+.stat-label { font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* Semantic Stat Card Modifiers */
+.stat-card.taken,
+.stat-card.completed {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.stat-card.taken .stat-value,
+.stat-card.completed .stat-value {
+  color: var(--s2b-success);
+}
+.stat-card.taken .stat-label,
+.stat-card.completed .stat-label {
+  color: #15803d;
+  font-weight: 700;
+}
+
+.stat-card.missed {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+.stat-card.missed .stat-value {
+  color: var(--s2b-urgent);
+}
+.stat-card.missed .stat-label {
+  color: var(--s2b-urgent);
+  font-weight: 700;
+}
+
+.stat-card.current,
+.stat-card.active {
+  background: var(--s2b-teal-light);
+  border-color: var(--s2b-teal-mid);
+}
+.stat-card.current .stat-value,
+.stat-card.active .stat-value {
+  color: var(--s2b-teal-dark);
+}
+.stat-card.current .stat-label,
+.stat-card.active .stat-label {
+  color: var(--s2b-teal-dark);
+  font-weight: 700;
+}
+
+.stat-card.upcoming,
+.stat-card.pending {
+  background: var(--surface-base);
+  border-color: var(--border-light);
+}
+.stat-card.upcoming .stat-value,
+.stat-card.pending .stat-value {
+  color: var(--text-secondary);
+}
+.stat-card.upcoming .stat-label,
+.stat-card.pending .stat-label {
+  color: var(--text-muted);
+}
 
 /* ── GREETING HEADER ─────────────────── */
 .greeting-header {
@@ -1986,6 +2052,406 @@ body {
 .dose-btn.secondary:hover { background: rgba(255,255,255,0.16); }
 .dose-btn.single   { flex: none; background: rgba(255,255,255,0.22); color: white; padding: 10px 20px; }
 
+/* ── SCALABLE MULTI-DOSE SYSTEM (PASS 2 REFINED) ───────── */
+.doses-section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 20px 16px 20px;
+}
+
+/* Daily Dose Summary Header */
+.doses-summary-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+.doses-summary-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.doses-summary-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+.doses-summary-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--bg-surface-alt, #f1f5f9);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+.doses-summary-badge.all-completed {
+  background: #ecfdf5;
+  color: var(--s2b-success);
+  border-color: #a7f3d0;
+}
+
+.doses-progress-bar-track {
+  width: 100%;
+  height: 6px;
+  background: var(--border-light);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.doses-progress-bar-fill {
+  height: 100%;
+  background: var(--s2b-success);
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.doses-list-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Individual Dose Card */
+.dose-item-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-xl, 16px);
+  padding: 14px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all var(--transition-fast, 0.2s ease);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* State-specific card styling */
+.dose-item-card.state-due-now {
+  border-color: var(--s2b-teal);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12), 0 4px 12px rgba(15, 118, 110, 0.08);
+  background: #ffffff;
+}
+.dose-item-card.state-taken,
+.dose-item-card.state-completed {
+  border-color: #a7f3d0;
+  background: #fbfdfc;
+}
+.dose-item-card.state-missed,
+.dose-item-card.state-not-taken {
+  border-color: #fecaca;
+  background: #fffafa;
+}
+.dose-item-card.state-needs-review {
+  border-color: #fed7aa;
+  background: #fffbf5;
+}
+
+/* Dose Card Header Row */
+.dose-card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dose-period-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.dose-period-text {
+  color: var(--text-primary);
+}
+.dose-time-sep {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+.dose-time-text {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Status Badges */
+.dose-status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+.dose-status-tag.taken {
+  color: var(--s2b-success);
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+.dose-status-tag.due-now {
+  color: #0f766e;
+  background: #ccfbf1;
+  border: 1px solid #99f6e4;
+}
+.dose-status-tag.upcoming {
+  color: var(--text-tertiary);
+  background: #f1f5f9;
+  border: 1px solid var(--border-light);
+}
+.dose-status-tag.missed {
+  color: var(--s2b-urgent);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+.dose-status-tag.hold {
+  color: #c2410c;
+  background: #ffedd5;
+  border: 1px solid #fed7aa;
+}
+
+/* Pulsing dot for Due Now */
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  background: #0f766e;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 0 rgba(15, 118, 110, 0.7);
+  animation: pulse-ring 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(15, 118, 110, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(15, 118, 110, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(15, 118, 110, 0); }
+}
+
+@keyframes doseFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Info Row */
+.dose-card-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.dose-name-text {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.dose-amount-pill {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--s2b-teal);
+  background: var(--s2b-teal-light);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.dose-desc-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Actions and states */
+.dose-action-btn-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.btn-dose-mark-taken {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md, 10px);
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid #86efac;
+  background: #f0fdf4;
+  color: var(--s2b-success);
+  transition: all var(--transition-fast);
+}
+.btn-dose-mark-taken:hover {
+  background: #dcfce7;
+}
+.btn-dose-mark-taken.due-btn {
+  background: var(--s2b-success);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.28);
+}
+.btn-dose-mark-taken.due-btn:hover {
+  background: #059669;
+}
+.dose-details-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--s2b-blue);
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.dose-details-link:hover {
+  text-decoration: underline;
+}
+
+/* Confirmation prompt */
+.dose-confirm-prompt {
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md, 10px);
+  padding: 10px 12px;
+  margin-top: 4px;
+  animation: doseFadeIn 0.2s ease-out;
+}
+.dose-confirm-question {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.dose-confirm-btns {
+  display: flex;
+  gap: 8px;
+}
+.btn-confirm-yes {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: var(--s2b-success);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.btn-confirm-yes:hover {
+  background: #059669;
+}
+.btn-confirm-cancel {
+  background: white;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-confirm-cancel:hover {
+  background: #f1f5f9;
+}
+
+/* Taken confirmed state row */
+.dose-taken-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+.dose-taken-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dose-taken-details {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.dose-taken-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--s2b-success);
+}
+.dose-taken-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Missed state display */
+.dose-missed-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 2px;
+}
+.dose-missed-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.dose-missed-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--s2b-urgent);
+}
+.dose-missed-sub {
+  font-size: 12px;
+  color: #991b1b;
+  line-height: 1.4;
+}
+.dose-missed-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.btn-dose-secondary {
+  flex: 1;
+  background: var(--s2b-urgent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-dose-secondary:hover {
+  background: #b91c1c;
+}
+.btn-dose-ghost {
+  background: white;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md, 8px);
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-dose-ghost:hover {
+  background: #f8fafc;
+}
+
+/* Hold state display */
+.dose-hold-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+.dose-hold-text {
+  font-size: 12px;
+  color: #9a3412;
+  line-height: 1.4;
+}
+
 /* ── TASK ROW — PASS 3 ENHANCED ───────────────── */
 .task-row {
   display: flex;
@@ -3098,3 +3564,876 @@ body {
   background: var(--s2b-success);
   border-color: var(--s2b-success);
 }
+
+/* =============================================
+   REFINED PASS 1 — MODERN AUTHENTICATION & PHONE OTP
+   ============================================= */
+
+/* ── SOCIAL AUTHENTICATION BUTTONS ──────────── */
+.btn-social-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-social {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 16px;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  user-select: none;
+  outline: none;
+}
+
+.btn-social:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+}
+
+.btn-social:active {
+  transform: translateY(0);
+}
+
+.btn-social-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.btn-social-label {
+  flex: 1;
+  text-align: center;
+  margin-right: 24px;
+}
+
+/* Social Provider Variants */
+.btn-social.btn-google {
+  background: #ffffff;
+  border-color: #dadce0;
+  color: #3c4043;
+}
+.btn-social.btn-google:hover {
+  background: #f8f9fa;
+  border-color: #c6c9cc;
+}
+
+.btn-social.btn-apple {
+  background: #000000;
+  border-color: #000000;
+  color: #ffffff;
+}
+.btn-social.btn-apple:hover {
+  background: #1f1f23;
+  border-color: #1f1f23;
+}
+
+.btn-social.btn-instagram {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  color: #1f2937;
+  position: relative;
+}
+.btn-social.btn-instagram:hover {
+  background: #fdf4f8;
+  border-color: #f472b6;
+  color: #9d174d;
+}
+
+.btn-social.btn-email-action {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: var(--s2b-blue);
+}
+.btn-social.btn-email-action:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.btn-social.btn-phone-action {
+  background: var(--s2b-teal-light);
+  border-color: var(--s2b-teal-mid);
+  color: var(--s2b-teal-dark);
+}
+.btn-social.btn-phone-action:hover {
+  background: #cbf3f8;
+  border-color: var(--s2b-teal);
+}
+
+/* ── PHONE NUMBER WITH COUNTRY SELECT ───────── */
+.phone-entry-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.phone-entry-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.country-code-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-card);
+  border: 2px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--s2b-blue);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.country-code-picker:hover {
+  border-color: var(--s2b-teal);
+}
+
+.phone-input-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── CHANGE PHONE CARD ──────────────────────── */
+.phone-destination-card {
+  background: var(--surface-base);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.phone-destination-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.phone-destination-number {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--s2b-blue);
+}
+
+.btn-change-phone {
+  background: var(--s2b-teal-light);
+  color: var(--s2b-teal-dark);
+  border: 1px solid var(--s2b-teal-mid);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all var(--transition-fast);
+}
+
+.btn-change-phone:hover {
+  background: var(--s2b-teal);
+  color: #fff;
+  border-color: var(--s2b-teal);
+}
+
+/* ── OTP TIMER & RESEND ─────────────────────── */
+.otp-timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.otp-timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  color: #0d9488;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.otp-timer-pill.expired {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #b45309;
+}
+
+.otp-quick-fill-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--surface-base);
+  border: 1px dashed var(--border-mid);
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  margin-top: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color var(--transition-fast);
+}
+
+.otp-quick-fill-hint:hover {
+  background: var(--s2b-teal-light);
+  color: var(--s2b-teal-dark);
+  border-color: var(--s2b-teal);
+}
+
+/* ── SOCIAL AUTH SUCCESS SIMULATION CHIP ────── */
+.social-prefill-card {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+.social-prefill-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #bbf7d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #166534;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────
+   PASS 3 — PERSISTENT FLOATING SOS BUTTON
+   ───────────────────────────────────────────── */
+.floating-sos-btn {
+  position: absolute;
+  bottom: 74px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border-radius: 9999px;
+  padding: 8px 14px 8px 11px;
+  height: 42px;
+  min-width: 82px;
+  cursor: pointer;
+  z-index: 95;
+  box-shadow: 
+    0 4px 14px rgba(225, 29, 72, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.25);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, filter 0.15s ease, opacity 0.25s ease;
+}
+
+.floating-sos-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 
+    0 8px 22px rgba(225, 29, 72, 0.6),
+    0 3px 8px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.08);
+}
+
+.floating-sos-btn:active {
+  transform: translateY(1px) scale(0.96);
+  box-shadow: 
+    0 2px 8px rgba(225, 29, 72, 0.4),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.floating-sos-btn .sos-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-sos-btn .sos-btn-text {
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Subtle emergency pulse animation */
+.floating-sos-btn .sos-pulse-ring {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 9999px;
+  border: 2px solid rgba(225, 29, 72, 0.7);
+  opacity: 0;
+  animation: sosPulseRing 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes sosPulseRing {
+  0% {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   PASS 3 — EMERGENCY HELP FLOW STYLING
+   ───────────────────────────────────────────── */
+.emergency-screen {
+  background: #fff7f7;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.emergency-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  display: inline-block;
+  animation: emergencyPulseDot 1.4s infinite;
+}
+
+@keyframes emergencyPulseDot {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+    box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);
+  }
+}
+
+.emergency-hero-alert {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 18px rgba(185, 28, 28, 0.32);
+  margin-bottom: 14px;
+}
+
+.emergency-hero-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-emergency-call-911 {
+  margin-top: 14px;
+  background: #dc2626;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.btn-emergency-call-911:hover {
+  background: #ef4444;
+  transform: translateY(-1px);
+}
+
+.btn-emergency-call-911:active {
+  transform: translateY(1px);
+  background: #b91c1c;
+}
+
+.call-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-emergency-call-clinic {
+  background: #ffffff;
+  border: 1.5px solid #fecaca;
+  border-radius: 12px;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.08);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-emergency-call-clinic:hover {
+  background: #fef2f2;
+  border-color: #f87171;
+}
+
+.emergency-step-card {
+  background: #ffffff;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.emergency-step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.emergency-step-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.emergency-step-desc {
+  font-size: 11.5px;
+  color: #475569;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+.btn-epipen-action {
+  background: #166534;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s ease;
+}
+
+.btn-epipen-action:hover {
+  background: #15803d;
+}
+
+.emergency-medical-id {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.medical-id-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 7px 0;
+  border-bottom: 1px dashed #e2e8f0;
+  font-size: 12px;
+  gap: 10px;
+}
+
+.medical-id-label {
+  color: #64748b;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.medical-id-value {
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+}
+
+.btn-notify-care-team {
+  background: #ffffff;
+  border: 1.5px solid var(--s2b-blue);
+  color: var(--s2b-blue);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 11px;
+  border-radius: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-notify-care-team:hover {
+  background: var(--s2b-blue-light);
+}
+
+.emergency-call-toast {
+  position: absolute;
+  top: 50px;
+  left: 16px;
+  right: 16px;
+  background: #991b1b;
+  color: #ffffff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  animation: toastSlideDown 0.3s ease;
+}
+
+@keyframes toastSlideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   PASS 3 — PROGRESS SEMANTIC STATUS STYLING
+   ───────────────────────────────────────────── */
+.progress-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  text-align: center;
+  margin-top: 10px;
+}
+.progress-calendar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.progress-calendar-day {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+.progress-calendar-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  transition: transform 0.15s ease;
+}
+.progress-calendar-dot.taken,
+.progress-calendar-dot.completed {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1.5px solid #86efac;
+}
+.progress-calendar-dot.missed {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1.5px solid #fca5a5;
+  font-weight: 800;
+}
+.progress-calendar-dot.active,
+.progress-calendar-dot.current {
+  background: var(--s2b-teal-light);
+  color: var(--s2b-teal-dark);
+  border: 2px solid var(--s2b-teal);
+  box-shadow: 0 0 0 3px rgba(0, 165, 187, 0.2);
+}
+.progress-calendar-dot.upcoming,
+.progress-calendar-dot.pending {
+  background: #f8fafc;
+  color: var(--text-muted);
+  border: 1.5px dashed var(--border-mid);
+}
+
+.semantic-legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-light);
+  font-size: 11px;
+}
+.semantic-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+.semantic-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.semantic-legend-dot.taken { background: var(--s2b-success); }
+.semantic-legend-dot.missed { background: var(--s2b-urgent); }
+.semantic-legend-dot.active { background: var(--s2b-teal); }
+.semantic-legend-dot.upcoming { background: var(--text-muted); }
+
+/* ─────────────────────────────────────────────
+   PRESCRIPTION REFILLS & MEDICATION MANAGEMENT
+   ───────────────────────────────────────────── */
+.rx-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.rx-card.urgent,
+.rx-card-urgent {
+  border-left: 4px solid var(--s2b-urgent);
+  background: #fffafa;
+}
+
+.rx-card.low,
+.rx-card-low {
+  border-left: 4px solid var(--s2b-warning);
+  background: #fffdfa;
+}
+
+.rx-card.normal,
+.rx-card-normal {
+  border-left: 4px solid var(--s2b-success);
+}
+
+.rx-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.rx-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-dark);
+  line-height: 1.25;
+}
+
+.rx-type {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.rx-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: var(--surface-base);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
+.rx-info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.rx-info-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rx-info-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+.rx-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.rx-footer-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Refill Modal / Bottom Sheet */
+.refill-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.55);
+  z-index: 150;
+  display: flex;
+  align-items: flex-end;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease;
+}
+
+.refill-modal-sheet {
+  background: var(--surface-card);
+  width: 100%;
+  border-radius: 24px 24px 0 0;
+  padding: 20px 20px 32px;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.2);
+  max-height: 85%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  animation: slideUpSheet 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpSheet {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.pharmacy-select-card {
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  margin-top: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pharmacy-select-card.selected {
+  border-color: var(--s2b-teal);
+  background: var(--s2b-teal-light);
+}
+
+.quick-note-chip {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 999px;
+  background: var(--surface-base);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  transition: all 0.15s ease;
+}
+
+.quick-note-chip:hover {
+  border-color: var(--s2b-teal);
+  color: var(--s2b-teal-dark);
+  background: var(--s2b-teal-light);
+}
+
+.refill-shortcut-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.refill-shortcut-banner:hover {
+  background: #ffedd5;
+}
+

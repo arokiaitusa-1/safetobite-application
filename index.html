@@ -16,7 +16,7 @@
 </head>
 
 <body>
-  <div id="viewer-shell">
+  <div id="vie r-shell">
     <aside id="screen-nav" aria-label="Screen Navigator">
       <div class="screen-nav-header">
         <div class="s2b-logo-small">
@@ -93,28 +93,49 @@
       <!-- PATIENT ROLE -->
       <div class="screen-nav-section">
         <div class="screen-nav-section-title">PATIENT ROLE — TODAY</div>
-        <button class="screen-nav-item" onclick="showScreen('patient-today')" id="nav-patient-today">Today (State B)</button>
-        <button class="screen-nav-item" onclick="showScreen('today-state-a')" id="nav-today-state-a">Today — State A</button>
-        <button class="screen-nav-item" onclick="showScreen('today-state-c')" id="nav-today-state-c">Today — State C</button>
-        <button class="screen-nav-item" onclick="showScreen('today-state-d')" id="nav-today-state-d">Today — State D</button>
-        <button class="screen-nav-item" onclick="showScreen('today-state-e')" id="nav-today-state-e">Today — State E</button>
-        <button class="screen-nav-item" onclick="showScreen('today-state-f')" id="nav-today-state-f">Today — State F</button>
-        <button class="screen-nav-item" onclick="showScreen('today-state-g')" id="nav-today-state-g">Today — State G</button>
-        <button class="screen-nav-item" onclick="showScreen('today-loading')" id="nav-today-loading">Today — Loading</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-today')" id="nav-patient-today">Today (State
+          B)</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-a')" id="nav-today-state-a">Today — State
+          A</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-c')" id="nav-today-state-c">Today — State
+          C</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-d')" id="nav-today-state-d">Today — State
+          D</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-e')" id="nav-today-state-e">Today — State
+          E</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-f')" id="nav-today-state-f">Today — State
+          F</button>
+        <button class="screen-nav-item" onclick="showScreen('today-state-g')" id="nav-today-state-g">Today — State
+          G</button>
+        <button class="screen-nav-item" onclick="showScreen('today-loading')" id="nav-today-loading">Today —
+          Loading</button>
         <button class="screen-nav-item" onclick="showScreen('today-error')" id="nav-today-error">Today — Error</button>
       </div>
 
       <!-- PATIENT ROLE — FLOWS -->
       <div class="screen-nav-section">
         <div class="screen-nav-section-title">PATIENT ROLE — FLOWS</div>
-        <button class="screen-nav-item" onclick="showScreen('today-assessment-placeholder')" id="nav-assessment-placeholder">Assessment (Coming in Pass 4)</button>
-        <button class="screen-nav-item" onclick="showScreen('today-reaction-placeholder')" id="nav-reaction-placeholder">Reaction Check (Pass 6)</button>
-        <button class="screen-nav-item" onclick="showScreen('today-food-placeholder')" id="nav-food-placeholder">Food Intake (Pass 7)</button>
-        <button class="screen-nav-item" onclick="showScreen('today-emergency-placeholder')" id="nav-emergency-placeholder">Emergency Help</button>
-        <button class="screen-nav-item" onclick="showScreen('patient-treatment')" id="nav-patient-treatment">Treatment</button>
-        <button class="screen-nav-item" onclick="showScreen('patient-progress')" id="nav-patient-progress">Progress</button>
+        <button class="screen-nav-item" onclick="showScreen('today-assessment-placeholder')"
+          id="nav-assessment-placeholder">Assessment (Coming in Pass 4)</button>
+        <button class="screen-nav-item" onclick="showScreen('today-reaction-placeholder')"
+          id="nav-reaction-placeholder">Reaction Check (Pass 6)</button>
+        <button class="screen-nav-item" onclick="showScreen('today-food-placeholder')" id="nav-food-placeholder">Food
+          Intake (Pass 7)</button>
+        <button class="screen-nav-item" onclick="showScreen('today-emergency-placeholder')"
+          id="nav-emergency-placeholder">Emergency Help</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-treatment')"
+          id="nav-patient-treatment">Treatment</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-prescriptions')"
+          id="nav-patient-prescriptions">Prescription Refills</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-refill-request')"
+          id="nav-patient-refill-request">Request a Refill</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-refill-success')"
+          id="nav-patient-refill-success">Refill Request Sent</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-progress')"
+          id="nav-patient-progress">Progress</button>
         <button class="screen-nav-item" onclick="showScreen('patient-care')" id="nav-patient-care">Care</button>
-        <button class="screen-nav-item" onclick="showScreen('patient-profile')" id="nav-patient-profile">Profile</button>
+        <button class="screen-nav-item" onclick="showScreen('patient-profile')"
+          id="nav-patient-profile">Profile</button>
       </div>
 
 
@@ -172,6 +193,20 @@
       <div id="phone-frame">
         <div class="phone-notch"></div>
         <div id="phone-screen"></div>
+        <!-- PERSISTENT FLOATING SOS BUTTON -->
+        <button id="floating-sos-btn" class="floating-sos-btn" onclick="triggerSos()" aria-label="Emergency Help SOS"
+          title="Immediate Emergency Help" style="display:none;">
+          <span class="sos-pulse-ring"></span>
+          <span class="sos-btn-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </span>
+          <span class="sos-btn-text">SOS</span>
+        </button>
       </div>
       <div id="screen-label"></div>
     </main>

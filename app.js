@@ -274,37 +274,77 @@ INFO['onboarding-3'] = {
 SCREENS['login'] = () => `
   <div class="screen-full" style="min-height:780px; background:#fff;">
     ${statusBar('#fff')}
-    <div style="padding:20px 28px 40px; display:flex; flex-direction:column; min-height:calc(780px - 44px);">
+    <div style="padding:16px 24px 36px; display:flex; flex-direction:column; min-height:calc(780px - 44px); overflow-y:auto; scrollbar-width:none;">
       <div style="flex:1;">
-        <div style="margin-bottom:32px; text-align:center; padding-top:16px;">
+        <div style="margin-bottom:20px; text-align:center; padding-top:8px;">
           <div style="width:52px; height:52px; background:var(--s2b-teal-light); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;">${icon('shield-check', 28, 'var(--s2b-teal)')}</div>
-          <div style="font-size:26px; font-weight:800; color:var(--s2b-blue);">Welcome</div>
+          <div style="font-size:26px; font-weight:800; color:var(--s2b-blue); letter-spacing:-0.02em;">Welcome</div>
           <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Sign in to your Safe2Bite account</div>
         </div>
-        <div class="input-group">
-          <label class="input-label" for="email-input">Email Address</label>
-          <input id="email-input" class="input-field" type="email" placeholder="your@email.com" aria-label="Email Address" />
+
+        <!-- 1-Tap Social Provider Options -->
+        <div class="btn-social-stack" role="group" aria-label="Sign in options">
+          <button class="btn-social btn-google" onclick="handleSocialAuth('Google', 'login')" id="login-google-btn" aria-label="Continue with Google">
+            <span class="btn-social-icon">${icon('google', 20)}</span>
+            <span class="btn-social-label">Continue with Google</span>
+          </button>
+
+          <button class="btn-social btn-apple" onclick="handleSocialAuth('Apple', 'login')" id="login-apple-btn" aria-label="Continue with Apple">
+            <span class="btn-social-icon">${icon('apple', 20, '#fff')}</span>
+            <span class="btn-social-label">Continue with Apple</span>
+          </button>
+
+          <button class="btn-social btn-instagram" onclick="handleSocialAuth('Instagram', 'login')" id="login-instagram-btn" aria-label="Continue with Instagram">
+            <span class="btn-social-icon" style="color:#d62976;">${icon('instagram', 20, '#d62976')}</span>
+            <span class="btn-social-label">Continue with Instagram</span>
+          </button>
         </div>
-        <div class="input-group">
-          <label class="input-label" for="password-input">Password</label>
-          <input id="password-input" class="input-field" type="password" placeholder="••••••••" aria-label="Password" />
+
+        <div class="text-divider" style="margin:16px 0;">
+          <div class="text-divider-line"></div>
+          <span class="text-divider-label">or continue with</span>
+          <div class="text-divider-line"></div>
         </div>
-        <div style="text-align:right; margin-bottom:24px;">
-          <span onclick="showScreen('forgot-password')" style="font-size:13px; color:var(--s2b-teal); font-weight:600; cursor:pointer;">Forgot Password?</span>
+
+        <!-- Phone & Email Direct Options -->
+        <div class="btn-social-stack">
+          <button class="btn-social btn-phone-action" onclick="showScreen('phone-verify')" id="login-phone-btn" aria-label="Continue with Phone Number">
+            <span class="btn-social-icon">${icon('phone', 18, 'var(--s2b-teal-dark)')}</span>
+            <span class="btn-social-label">Continue with Phone Number</span>
+          </button>
+
+          <button class="btn-social btn-email-action" onclick="toggleEmailLoginCard()" id="login-email-toggle-btn" aria-label="Continue with Email">
+            <span class="btn-social-icon">${icon('mail', 18, 'var(--s2b-blue)')}</span>
+            <span class="btn-social-label">Continue with Email</span>
+          </button>
         </div>
-        <button class="btn btn-primary" onclick="showScreen('patient-today')" id="login-btn">Log In</button>
-        <div style="display:flex; align-items:center; gap:12px; margin:20px 0;">
-          <div style="flex:1; height:1px; background:var(--border-light);"></div>
-          <span style="font-size:12px; color:var(--text-muted);">or</span>
-          <div style="flex:1; height:1px; background:var(--border-light);"></div>
+
+        <!-- Collapsible Email/Password Form -->
+        <div id="email-login-container" style="display:none; margin-top:14px; padding:16px; background:var(--surface-base); border-radius:var(--radius-lg); border:1px solid var(--border-light); animation:fadeIn 0.2s ease;">
+          <div class="input-group" style="margin-bottom:12px;">
+            <label class="input-label" for="email-input">Email Address</label>
+            <input id="email-input" class="input-field" type="email" placeholder="your@email.com" aria-label="Email Address" />
+          </div>
+          <div class="input-group" style="margin-bottom:8px;">
+            <label class="input-label" for="password-input">Password</label>
+            <input id="password-input" class="input-field" type="password" placeholder="••••••••" aria-label="Password" />
+          </div>
+          <div style="text-align:right; margin-bottom:14px;">
+            <span onclick="showScreen('forgot-password')" style="font-size:12px; color:var(--s2b-teal); font-weight:600; cursor:pointer;">Forgot Password?</span>
+          </div>
+          <button class="btn btn-primary" onclick="showScreen('patient-today')" id="login-btn" style="padding:12px 20px;">Log In with Email</button>
         </div>
-        <button class="btn btn-secondary" style="width:100%; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;" id="biometric-btn">
-          ${icon('lock', 18, 'var(--s2b-blue)')} Use Biometrics
-        </button>
+
+        <div style="margin-top:14px;">
+          <button class="btn btn-secondary" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px;" id="biometric-btn" onclick="showScreen('patient-today')">
+            ${icon('lock', 18, 'var(--s2b-blue)')} Use Biometrics
+          </button>
+        </div>
       </div>
-      <div style="text-align:center; padding-top:16px;">
+
+      <div style="text-align:center; padding-top:14px; border-top:1px solid var(--border-light); margin-top:16px;">
         <span style="font-size:13px; color:var(--text-secondary);">New to Safe2Bite? </span>
-        <span onclick="showScreen('create-account')" style="font-size:13px; color:var(--s2b-teal); font-weight:600; cursor:pointer;">Create Account</span>
+        <span onclick="showScreen('create-account')" style="font-size:13px; color:var(--s2b-teal); font-weight:600; cursor:pointer;" id="link-create-account">Create Account</span>
       </div>
     </div>
   </div>`;
@@ -312,14 +352,15 @@ SCREENS['login'] = () => `
 INFO['login'] = {
   screen: 'Login',
   role: 'system',
-  desc: 'Returning user login. "Log In" goes directly to Today Dashboard. Forgot Password launches recovery flow. Create Account links to Pass 2 registration.',
+  desc: 'Simplified low-friction authentication. Supports modern 1-tap social login (Google, Apple, Instagram), fast phone OTP login, and collapsible email login.',
   ia: [
-    { title: 'Email Field', body: 'Primary identifier' },
-    { title: 'Password Field', body: 'Secure entry' },
-    { title: 'Forgot Password?', body: 'Leads to forgot-password screen' },
-    { title: 'Log In', body: 'Authenticates → Today Dashboard' },
-    { title: 'Biometrics', body: 'Face ID / Touch ID for returning users' },
-    { title: 'Create Account', body: 'Leads to create-account (Pass 2)' },
+    { title: 'Continue with Google', body: '1-tap sign in with Google credential' },
+    { title: 'Continue with Apple', body: '1-tap sign in with Apple ID / Face ID' },
+    { title: 'Continue with Instagram', body: '1-tap sign in with Instagram profile' },
+    { title: 'Continue with Phone Number', body: 'Passwordless SMS OTP authentication' },
+    { title: 'Continue with Email', body: 'Email/password sign-in with recovery link' },
+    { title: 'Biometrics', body: 'Quick return for verified devices' },
+    { title: 'Create Account', body: 'Leads to fast sign-up screen' },
   ]
 };
 
@@ -401,31 +442,7 @@ function greeting() {
   return 'Good evening';
 }
 
-// SVG ring progress indicator for daily status strip
-// filled = 0–100 percentage, ringClass = CSS modifier
-function statusRing(filled = 75, done = 3, total = 4, ringClass = 'ring-on-track') {
-  const r = 17; const circ = 2 * Math.PI * r;
-  const offset = circ - (filled / 100) * circ;
-  return `
-    <div class="daily-status-strip ${ringClass}">
-      <div class="daily-status-ring-wrap">
-        <svg class="daily-status-ring-svg" width="44" height="44" viewBox="0 0 44 44">
-          <circle class="daily-status-ring-track" cx="22" cy="22" r="${r}"/>
-          <circle class="daily-status-ring-fill" cx="22" cy="22" r="${r}"
-            stroke-dasharray="${circ.toFixed(1)}"
-            stroke-dashoffset="${offset.toFixed(1)}"/>
-        </svg>
-        <div class="daily-status-ring-center">${done}/${total}</div>
-      </div>
-      <div>
-        <div class="daily-status-label">${ringClass === 'ring-complete' ? 'All done today!' : ringClass === 'ring-critical' ? 'Action Required' : ringClass === 'ring-action' ? 'Needs Attention' : 'On Track'}</div>
-        <div class="daily-status-sub">${done} of ${total} tasks complete</div>
-      </div>
-      <div class="daily-status-badge-wrap">
-        <span class="status-badge ${ringClass === 'ring-complete' ? 'completed' : ringClass === 'ring-critical' ? 'urgent' : ringClass === 'ring-action' ? 'warning' : ringClass === 'ring-attention' ? 'attention' : 'completed'}">${ringClass === 'ring-complete' ? '● Complete' : ringClass === 'ring-critical' ? '● Action Required' : ringClass === 'ring-action' ? '● Needs Attention' : ringClass === 'ring-attention' ? '● Attention' : '● On Track'}</span>
-      </div>
-    </div>`;
-}
+// SVG ring progress indicator for daily status strip (Removed)
 
 // Reusable dose card builder for different states
 function todayDoseCard(state = 'upcoming', doseAmt = '5 mg', time = '8:00', period = 'AM', desc = 'Take with food after breakfast', btn1Label = 'Confirm Dose', btn1Id = 'dose-confirm-btn', btn2Label = 'I Did Not Take It', btn2Id = 'dose-missed-btn', btn2Screen = 'today-state-e') {
@@ -454,14 +471,306 @@ function todayDoseCard(state = 'upcoming', doseAmt = '5 mg', time = '8:00', peri
     </div>`;
 }
 
+// Render content for individual dose cards
+function renderDoseCardContent(d) {
+  const isTaken = d.state === 'taken' || d.state === 'completed';
+  const isDue = d.state === 'due-now';
+  const isMissed = d.state === 'missed';
+  const isNotTaken = d.state === 'not-taken';
+  const isHold = d.state === 'needs-review';
+
+  // Status tag
+  let statusBadge = '';
+  if (isTaken) {
+    statusBadge = `<span class="dose-status-tag taken">${icon('check', 13, 'var(--s2b-success)', 2.5)} Taken</span>`;
+  } else if (isDue) {
+    statusBadge = `<span class="dose-status-tag due-now"><span class="pulse-dot"></span> Due Now</span>`;
+  } else if (isNotTaken) {
+    statusBadge = `<span class="dose-status-tag not-taken" style="background:#fee2e2; color:#b91c1c;">${icon('emergency', 13, '#b91c1c', 2)} Not Taken</span>`;
+  } else if (isMissed) {
+    statusBadge = `<span class="dose-status-tag missed">${icon('emergency', 13, 'var(--s2b-urgent)', 2)} Missed</span>`;
+  } else if (isHold) {
+    statusBadge = `<span class="dose-status-tag hold">${icon('alerts', 13, '#c2410c', 2)} On Hold</span>`;
+  } else {
+    statusBadge = `<span class="dose-status-tag upcoming">${icon('clock', 12, 'var(--text-tertiary)', 2)} Upcoming</span>`;
+  }
+
+  // Dose details and action block
+  let actionHtml = '';
+  if (isTaken) {
+    actionHtml = `
+      <div class="dose-taken-row">
+        <div class="dose-taken-indicator">
+          ${icon('check-circle-filled', 18, 'var(--s2b-success)')}
+          <div class="dose-taken-details">
+            <span class="dose-taken-title">✓ Taken</span>
+            <span class="dose-taken-time">${d.takenTime || d.time}</span>
+          </div>
+        </div>
+        <div class="dose-details-link" onclick="showScreen('patient-treatment')">Details</div>
+      </div>`;
+  } else if (isNotTaken) {
+    actionHtml = `
+      <div class="dose-missed-box">
+        <div class="dose-missed-header">
+          ${icon('emergency', 16, 'var(--s2b-urgent)', 2)}
+          <div>
+            <div class="dose-missed-title">Not Taken</div>
+            <div class="dose-missed-sub">You recorded not taking this dose</div>
+          </div>
+        </div>
+        <div class="dose-missed-actions">
+          <button class="btn-dose-secondary" onclick="showScreen('patient-care')">Message Care Team</button>
+          <button class="btn-dose-ghost" onclick="confirmDoseTaken('${d.id}', '${d.time}')">I Took It Now</button>
+        </div>
+      </div>`;
+  } else if (isMissed) {
+    actionHtml = `
+      <div class="dose-missed-box">
+        <div class="dose-missed-header">
+          ${icon('emergency', 16, 'var(--s2b-urgent)', 2)}
+          <div>
+            <div class="dose-missed-title">⚠ Missed</div>
+            <div class="dose-missed-sub">Dose was not recorded</div>
+          </div>
+        </div>
+        <div class="dose-missed-actions">
+          <button class="btn-dose-secondary" onclick="showScreen('patient-care')">Message Care Team</button>
+          <button class="btn-dose-ghost" onclick="promptDoseConfirm('${d.id}')">I Took It</button>
+        </div>
+        <div class="dose-confirm-prompt" id="dose-confirm-${d.id}" style="display:none;">
+          <div class="dose-confirm-question">Did you take this dose?</div>
+          <div class="dose-confirm-btns">
+            <button class="btn-confirm-yes" onclick="confirmDoseTaken('${d.id}', '${d.time}')">
+              ${icon('check', 14, 'white', 2.5)} Yes, I took it
+            </button>
+            <button class="btn-confirm-cancel" onclick="cancelDoseConfirm('${d.id}')">Cancel</button>
+          </div>
+        </div>
+      </div>`;
+  } else if (isHold) {
+    actionHtml = `
+      <div class="dose-hold-box">
+        <div class="dose-hold-text">Please consult your care team before taking this dose.</div>
+        <button class="btn-dose-secondary" onclick="showScreen('patient-care')">Contact Care Team</button>
+      </div>`;
+  } else {
+    // Due Now or Upcoming
+    const isDueClass = isDue ? ' due-btn' : '';
+    actionHtml = `
+      <div id="dose-btn-wrap-${d.id}" class="dose-action-btn-wrap" style="display:flex; flex-direction:column; gap:12px; align-items:center;">
+        <div style="display:flex; flex-direction:row; gap:12px; align-items:center; width:100%; justify-content:center;">
+          <button class="btn-dose-mark-taken${isDueClass}" onclick="confirmDoseTaken('${d.id}', '${d.time}')" style="padding: 10px 20px;">
+            ${icon('check', 15, 'currentColor', 2.5)} Take Dose
+          </button>
+          <button class="btn-dose-ghost" onclick="confirmDoseNotTaken('${d.id}', '${d.time}')" style="background:transparent; color:var(--text-secondary); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:10px 16px; font-weight:600; font-size:14px; cursor:pointer;">
+            I Didn't Take It
+          </button>
+        </div>
+        <div class="dose-details-link" onclick="showScreen('patient-treatment')" style="margin-top:2px;">Details</div>
+      </div>`;
+  }
+
+  return `
+    <div class="dose-card-header-row">
+      <div class="dose-period-time">
+        <span class="dose-period-text">${d.period}</span>
+        <span class="dose-time-sep">—</span>
+        <span class="dose-time-text">${d.time}</span>
+      </div>
+      ${statusBadge}
+    </div>
+    <div class="dose-card-info-row">
+      <div class="dose-name-text">${d.name || 'Medication / Food Dose'}</div>
+      ${d.doseAmt ? `<div class="dose-amount-pill">${d.doseAmt}</div>` : ''}
+    </div>
+    <div class="dose-desc-text">${d.desc || 'Take with food as prescribed'}</div>
+    ${actionHtml}
+  `;
+}
+
+// Scalable multiple doses component
+function todayDosesList(doses, summaryOverride = null) {
+  const total = doses.length;
+  const completed = doses.filter(d => d.state === 'taken' || d.state === 'completed').length;
+  const missed = doses.filter(d => d.state === 'missed' || d.state === 'not-taken').length;
+  const isHold = doses.some(d => d.state === 'needs-review');
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+  let summaryText = `${completed} of ${total} doses completed`;
+  if (summaryOverride) {
+    summaryText = summaryOverride;
+  } else if (isHold) {
+    summaryText = `${completed} of ${total} completed · Doses on hold`;
+  } else if (missed > 0) {
+    summaryText = `${completed} of ${total} completed · ${missed} missed`;
+  }
+
+  let html = `
+    <div class="doses-section-container">
+      <div class="doses-summary-strip" id="doses-summary-strip">
+        <div class="doses-summary-left">
+          <span class="doses-summary-count" id="doses-summary-count-text">${summaryText}</span>
+        </div>
+        <div class="doses-summary-badge ${completed === total && total > 0 ? 'all-completed' : ''}" id="doses-summary-badge">
+          ${completed === total && total > 0 ? `${icon('check', 12, 'var(--s2b-success)', 2.5)} All Taken` : `${pct}%`}
+        </div>
+      </div>
+      <div class="doses-progress-bar-track">
+        <div class="doses-progress-bar-fill" id="doses-progress-bar-fill" style="width: ${pct}%;"></div>
+      </div>
+      <div class="doses-list-stack">`;
+
+  doses.forEach((d, idx) => {
+    const doseId = d.id || `dose-${d.period ? d.period.toLowerCase() : idx}`;
+    const cardState = d.state || 'upcoming';
+    html += `
+      <div class="dose-item-card state-${cardState}" id="dose-card-${doseId}"
+           data-id="${doseId}" data-period="${d.period || ''}" data-time="${d.time || ''}"
+           data-name="${d.name || ''}" data-doseamt="${d.doseAmt || ''}" data-desc="${d.desc || ''}">
+        ${renderDoseCardContent({ ...d, id: doseId })}
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+    </div>`;
+  return html;
+}
+
+// Global interactive helpers for dose marking & lightweight confirmation
+window.promptDoseConfirm = function(doseId) {
+  const box = document.getElementById(`dose-confirm-${doseId}`);
+  const btnWrap = document.getElementById(`dose-btn-wrap-${doseId}`);
+  if (box) box.style.display = 'block';
+  if (btnWrap) btnWrap.style.display = 'none';
+};
+
+window.cancelDoseConfirm = function(doseId) {
+  const box = document.getElementById(`dose-confirm-${doseId}`);
+  const btnWrap = document.getElementById(`dose-btn-wrap-${doseId}`);
+  if (box) box.style.display = 'none';
+  if (btnWrap) btnWrap.style.display = 'flex';
+};
+
+window.confirmDoseTaken = function(doseId, scheduledTime) {
+  const card = document.getElementById(`dose-card-${doseId}`);
+  if (!card) return;
+
+  const now = new Date();
+  let timeStr = scheduledTime;
+  try {
+    timeStr = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  } catch (e) {}
+
+  card.className = 'dose-item-card state-taken';
+  card.innerHTML = renderDoseCardContent({
+    id: doseId,
+    period: card.dataset.period || 'Scheduled Dose',
+    time: scheduledTime || card.dataset.time || '',
+    name: card.dataset.name || 'Medication / Food Dose',
+    doseAmt: card.dataset.doseamt || '5 mg',
+    desc: 'Recorded and confirmed',
+    state: 'taken',
+    takenTime: timeStr
+  });
+
+  updateDosesSummaryCount();
+};
+
+window.confirmDoseNotTaken = function(doseId, scheduledTime) {
+  const card = document.getElementById(`dose-card-${doseId}`);
+  if (!card) return;
+
+  card.className = 'dose-item-card state-not-taken';
+  card.innerHTML = renderDoseCardContent({
+    id: doseId,
+    period: card.dataset.period || 'Scheduled Dose',
+    time: scheduledTime || card.dataset.time || '',
+    name: card.dataset.name || 'Medication / Food Dose',
+    doseAmt: card.dataset.doseamt || '5 mg',
+    desc: 'Recorded as not taken',
+    state: 'not-taken'
+  });
+
+  updateDosesSummaryCount();
+};
+
+window.updateDosesSummaryCount = function() {
+  const cards = document.querySelectorAll('.dose-item-card');
+  if (!cards.length) return;
+  const total = cards.length;
+  let completed = 0;
+  let missed = 0;
+  cards.forEach(c => {
+    if (c.classList.contains('state-taken') || c.classList.contains('state-completed')) {
+      completed++;
+    } else if (c.classList.contains('state-missed') || c.classList.contains('state-not-taken')) {
+      missed++;
+    }
+  });
+
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const countEl = document.getElementById('doses-summary-count-text');
+  const barEl = document.getElementById('doses-progress-bar-fill');
+  const badgeEl = document.getElementById('doses-summary-badge');
+
+  if (countEl) {
+    if (missed > 0) {
+      countEl.textContent = `${completed} of ${total} completed · ${missed} missed`;
+    } else {
+      countEl.textContent = `${completed} of ${total} doses completed`;
+    }
+  }
+  if (barEl) {
+    barEl.style.width = `${pct}%`;
+  }
+  if (badgeEl) {
+    if (completed === total && total > 0) {
+      badgeEl.className = 'doses-summary-badge all-completed';
+      badgeEl.innerHTML = `✓ All Taken`;
+    } else {
+      badgeEl.className = 'doses-summary-badge';
+      badgeEl.textContent = `${pct}%`;
+    }
+  }
+};
+
 // Reusable task list card builder
-function todayTasksCard(tasks) {
+function todayTasksCard(tasks, summary = null) {
   // tasks = array of { iconName, iconClass, title, sub, status, screen }
   // status: 'done' | 'due-now' | 'due' | 'pending' | 'missed' | 'skipped'
   const statusChip = { done: 'Done', 'due-now': 'Due Now', due: 'Scheduled', pending: 'Not Started', missed: 'Missed', skipped: 'Skipped' };
   const checkState = { done: 'done', 'due-now': 'due', due: 'due', pending: '', missed: 'missed', skipped: '' };
+
+  let summaryHtml = '';
+  if (summary) {
+    const { done, total, statusText, statusColor } = summary;
+    const percent = total > 0 ? (done / total) * 100 : 0;
+    const r = 16; const circ = 2 * Math.PI * r;
+    const offset = circ - (percent / 100) * circ;
+    
+    summaryHtml = `
+      <div style="padding:16px 20px; border-bottom:1px solid var(--border-light); background:var(--bg-surface); display:flex; align-items:center; gap:16px;">
+        <div style="width:40px; height:40px; position:relative; flex-shrink:0;">
+          <svg width="40" height="40" viewBox="0 0 40 40" style="transform: rotate(-90deg);">
+            <circle cx="20" cy="20" r="${r}" fill="none" stroke="var(--border-light)" stroke-width="4"/>
+            <circle cx="20" cy="20" r="${r}" fill="none" stroke="${statusColor}" stroke-width="4" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" stroke-linecap="round" style="transition: stroke-dashoffset 0.5s ease;"/>
+          </svg>
+          <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--text-primary); margin-top:1px;">${percent === 100 ? icon('check', 14, statusColor, 3) : `${done}/${total}`}</div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:16px; font-weight:800; color:${statusColor}; margin-bottom:2px;">${statusText}</div>
+          <div style="font-size:13px; font-weight:600; color:var(--text-secondary);">${done} of ${total} tasks completed</div>
+        </div>
+      </div>
+    `;
+  }
+
   return `
     <div class="card" style="padding:0; overflow:hidden; border-radius:var(--radius-xl);">
+      ${summaryHtml}
       ${tasks.map(t => `
         <div class="task-row ${t.status === 'done' ? 'done' : ''}" onclick="showScreen('${t.screen}')">
           <div class="task-icon-cell ${t.iconClass}">${icon(t.iconName, 20, t.status === 'done' ? 'var(--s2b-success)' : t.status === 'missed' ? 'var(--s2b-urgent)' : t.status === 'due-now' ? 'var(--s2b-teal)' : 'var(--s2b-blue)', 1.75)}</div>
@@ -607,8 +916,6 @@ SCREENS['patient-today'] = () => `
           <div class="notif-dot"></div>
         </div>
       </div>
-      <!-- Daily status strip -->
-      ${statusRing(50, 2, 4, 'ring-on-track')}
     </div>
 
     <!-- HEALTH ASSESSMENT -->
@@ -619,19 +926,33 @@ SCREENS['patient-today'] = () => `
       ${healthCard('not-started', 'today-assessment-placeholder')}
     </div>
 
-    <!-- TODAY'S DOSE -->
+    <!-- TODAY'S DOSES -->
     <div class="today-section-header">
-      <div class="today-section-title">Today's Dose</div>
+      <div class="today-section-title">Today's Doses</div>
       <div class="today-section-link" onclick="showScreen('patient-treatment')">View Plan</div>
     </div>
     <div class="today-section">
-      ${todayDoseCard('upcoming', '5 mg', '8:00', 'AM', 'Take with food after breakfast · Scheduled dose', 'View Dose', 'view-dose-btn-b', 'I Did Not Take It', 'missed-dose-btn-b', 'today-state-e')}
+      ${todayDosesList([
+        { period: 'Morning', name: 'Medication / Food Dose', time: '8:00 AM', state: 'taken', takenTime: '8:05 AM', doseAmt: '5 mg', desc: 'Taken with breakfast · No reaction reported' },
+        { period: 'Afternoon', name: 'Medication / Food Dose', time: '1:00 PM', state: 'due-now', doseAmt: '5 mg', desc: 'Take with food · Observe for 30 minutes' },
+        { period: 'Night', name: 'Medication / Food Dose', time: '8:00 PM', state: 'upcoming', doseAmt: '5 mg', desc: 'Take with dinner or evening snack' }
+      ])}
+      <!-- Contextual Low Supply Refill Reminder -->
+      <div style="margin-top:10px;">
+        <div class="refill-shortcut-banner" onclick="showScreen('patient-prescriptions')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:7px; height:7px; border-radius:50%; background:var(--s2b-warning); display:inline-block;"></span>
+            <span style="font-size:12px; font-weight:600; color:var(--text-primary);">Prescription Refill Needed</span>
+            <span style="font-size:11px; color:var(--text-secondary);">· Epinephrine (2 left)</span>
+          </div>
+          <span style="font-size:11.5px; font-weight:700; color:var(--s2b-teal);">Request Refill &rarr;</span>
+        </div>
+      </div>
     </div>
 
     <!-- TODAY'S TASKS -->
     <div class="today-section-header">
       <div class="today-section-title">Today's Tasks</div>
-      <div class="today-section-link">4 tasks</div>
     </div>
     <div class="today-section">
       ${todayTasksCard([
@@ -639,7 +960,7 @@ SCREENS['patient-today'] = () => `
         { iconName: 'treatment',   iconClass: 'blue',   title: "Today's Dose",        sub: '5 mg · Scheduled 8:00 AM',         status: 'due',     screen: 'patient-treatment' },
         { iconName: 'reaction',    iconClass: 'yellow', title: 'Reaction Check',      sub: 'After dose · 30 min observation',  status: 'pending', screen: 'today-reaction-placeholder' },
         { iconName: 'food',        iconClass: 'teal',   title: 'Food Intake',         sub: 'Record today\'s meals',            status: 'pending', screen: 'today-food-placeholder' },
-      ])}
+      ], { done: 2, total: 4, statusText: 'Upcoming', statusColor: 'var(--s2b-blue)' })}
     </div>
 
     <!-- COMING UP -->
@@ -710,7 +1031,6 @@ SCREENS['today-state-a'] = () => `
         </div>
         <div class="today-notif-btn" id="notif-btn-a">${icon('bell', 20, 'var(--s2b-blue)', 1.75)}</div>
       </div>
-      ${statusRing(0, 0, 4, 'ring-on-track')}
     </div>
 
     <div class="today-section-header" style="margin-top:18px;">
@@ -721,16 +1041,19 @@ SCREENS['today-state-a'] = () => `
     </div>
 
     <div class="today-section-header">
-      <div class="today-section-title">Today's Dose</div>
+      <div class="today-section-title">Today's Doses</div>
       <div class="today-section-link" onclick="showScreen('patient-treatment')">View Plan</div>
     </div>
     <div class="today-section">
-      ${todayDoseCard('upcoming', '5 mg', '8:00', 'AM', 'Take with food after breakfast · Due this morning', 'View Dose', 'view-dose-a', 'I Did Not Take It', 'missed-a', 'today-state-e')}
+      ${todayDosesList([
+        { period: 'Morning', name: 'Medication / Food Dose', time: '8:00 AM', state: 'due-now', doseAmt: '5 mg', desc: 'Due this morning · Take with food after breakfast' },
+        { period: 'Afternoon', name: 'Medication / Food Dose', time: '1:00 PM', state: 'upcoming', doseAmt: '5 mg', desc: 'Take with lunch' },
+        { period: 'Night', name: 'Medication / Food Dose', time: '8:00 PM', state: 'upcoming', doseAmt: '5 mg', desc: 'Take with dinner' }
+      ])}
     </div>
 
     <div class="today-section-header">
       <div class="today-section-title">Today's Tasks</div>
-      <div class="today-section-link">4 tasks</div>
     </div>
     <div class="today-section">
       ${todayTasksCard([
@@ -738,7 +1061,7 @@ SCREENS['today-state-a'] = () => `
         { iconName: 'treatment',   iconClass: 'blue',   title: "Today's Dose",        sub: '5 mg · Scheduled 8:00 AM',        status: 'pending', screen: 'patient-treatment' },
         { iconName: 'reaction',    iconClass: 'yellow', title: 'Reaction Check',      sub: 'After dose · 30 min observation', status: 'pending', screen: 'today-reaction-placeholder' },
         { iconName: 'food',        iconClass: 'teal',   title: 'Food Intake',         sub: 'Record today\'s meals',           status: 'pending', screen: 'today-food-placeholder' },
-      ])}
+      ], { done: 0, total: 4, statusText: 'Upcoming', statusColor: 'var(--s2b-blue)' })}
     </div>
 
     <div class="today-section-header">
@@ -776,7 +1099,6 @@ SCREENS['today-state-c'] = () => `
         </div>
         <div class="today-notif-btn" id="notif-btn-c">${icon('bell', 20, 'var(--s2b-blue)', 1.75)}</div>
       </div>
-      ${statusRing(100, 4, 4, 'ring-complete')}
     </div>
 
     <!-- All done celebration bar -->
@@ -792,7 +1114,6 @@ SCREENS['today-state-c'] = () => `
 
     <div class="today-section-header">
       <div class="today-section-title">Today's Tasks</div>
-      <div class="today-section-link">4 of 4 done</div>
     </div>
     <div class="today-section">
       ${todayTasksCard([
@@ -800,7 +1121,7 @@ SCREENS['today-state-c'] = () => `
         { iconName: 'treatment',   iconClass: 'green', title: "Today's Dose",        sub: 'Confirmed 8:11 AM',               status: 'done', screen: 'patient-treatment' },
         { iconName: 'reaction',    iconClass: 'green', title: 'Reaction Check',      sub: 'Completed 8:42 AM — No reaction', status: 'done', screen: 'today-reaction-placeholder' },
         { iconName: 'food',        iconClass: 'green', title: 'Food Intake',         sub: 'Recorded · 3 meals logged',       status: 'done', screen: 'today-food-placeholder' },
-      ])}
+      ], { done: 4, total: 4, statusText: 'Completed', statusColor: 'var(--s2b-success)' })}
     </div>
 
     <div class="today-section-header">
@@ -811,10 +1132,14 @@ SCREENS['today-state-c'] = () => `
     </div>
 
     <div class="today-section-header">
-      <div class="today-section-title">Today's Dose</div>
+      <div class="today-section-title">Today's Doses</div>
     </div>
     <div class="today-section">
-      ${todayDoseCard('completed', '5 mg', '8:11', 'AM', 'Confirmed — taken with breakfast. No reaction reported.', 'View Details', 'view-dose-c')}
+      ${todayDosesList([
+        { period: 'Morning', name: 'Medication / Food Dose', time: '8:11 AM', state: 'taken', takenTime: '8:11 AM', doseAmt: '5 mg', desc: 'Taken with breakfast · No reaction reported' },
+        { period: 'Afternoon', name: 'Medication / Food Dose', time: '1:15 PM', state: 'taken', takenTime: '1:15 PM', doseAmt: '5 mg', desc: 'Taken with lunch' },
+        { period: 'Night', name: 'Medication / Food Dose', time: '8:02 PM', state: 'taken', takenTime: '8:02 PM', doseAmt: '5 mg', desc: 'Taken with dinner' }
+      ])}
     </div>
 
     <div class="today-section-header">
@@ -864,14 +1189,17 @@ SCREENS['today-state-d'] = () => `
           <div class="notif-dot"></div>
         </div>
       </div>
-      ${statusRing(25, 1, 4, 'ring-on-track')}
     </div>
 
     <div class="today-section-header" style="margin-top:18px;">
-      <div class="today-section-title">Dose Ready</div>
+      <div class="today-section-title">Today's Doses</div>
     </div>
     <div class="today-section">
-      ${todayDoseCard('due-now', '5 mg', '8:00', 'AM', 'Your scheduled dose is ready. Take with food and stay nearby for 30 minutes.', 'View Dose Details', 'confirm-dose-d', 'I Did Not Take It', 'missed-d', 'today-state-e')}
+      ${todayDosesList([
+        { period: 'Morning', name: 'Medication / Food Dose', time: '8:00 AM', state: 'taken', takenTime: '8:00 AM', doseAmt: '5 mg', desc: 'Taken with breakfast' },
+        { period: 'Afternoon', name: 'Medication / Food Dose', time: '1:00 PM', state: 'due-now', doseAmt: '5 mg', desc: 'Your scheduled dose is ready. Take with food and stay nearby for 30 minutes.' },
+        { period: 'Night', name: 'Medication / Food Dose', time: '8:00 PM', state: 'upcoming', doseAmt: '5 mg', desc: 'Scheduled evening dose' }
+      ])}
     </div>
 
     <div class="today-section-header">
@@ -890,7 +1218,7 @@ SCREENS['today-state-d'] = () => `
         { iconName: 'treatment',   iconClass: 'teal',   title: "Today's Dose",        sub: '5 mg · Due Now',                  status: 'due-now', screen: 'patient-treatment' },
         { iconName: 'reaction',    iconClass: 'yellow', title: 'Reaction Check',      sub: 'After dose · 30 min observation', status: 'pending', screen: 'today-reaction-placeholder' },
         { iconName: 'food',        iconClass: 'teal',   title: 'Food Intake',         sub: 'Record today\'s meals',           status: 'pending', screen: 'today-food-placeholder' },
-      ])}
+      ], { done: 1, total: 4, statusText: 'Due Now', statusColor: 'var(--s2b-teal)' })}
     </div>
 
     <div class="today-section-header">
@@ -924,7 +1252,6 @@ SCREENS['today-state-e'] = () => `
           <div class="notif-dot"></div>
         </div>
       </div>
-      ${statusRing(25, 1, 4, 'ring-action')}
     </div>
 
     <!-- Missed dose attention card -->
@@ -940,10 +1267,14 @@ SCREENS['today-state-e'] = () => `
     </div>
 
     <div class="today-section-header">
-      <div class="today-section-title">Today's Dose</div>
+      <div class="today-section-title">Today's Doses</div>
     </div>
     <div class="today-section">
-      ${todayDoseCard('missed', '5 mg', '8:00', 'AM', 'This dose was not recorded. Do not take without guidance from your care team.', 'Contact Care Team', 'contact-care-e')}
+      ${todayDosesList([
+        { period: 'Morning', name: 'Medication / Food Dose', time: '8:00 AM', state: 'missed', doseAmt: '5 mg', desc: 'This dose was not recorded. Do not take without guidance from your care team.' },
+        { period: 'Afternoon', name: 'Medication / Food Dose', time: '1:00 PM', state: 'due-now', doseAmt: '5 mg', desc: 'Next scheduled dose · Take with food' },
+        { period: 'Night', name: 'Medication / Food Dose', time: '8:00 PM', state: 'upcoming', doseAmt: '5 mg', desc: 'Scheduled evening dose' }
+      ])}
     </div>
 
     <div class="today-section-header">
@@ -955,7 +1286,7 @@ SCREENS['today-state-e'] = () => `
         { iconName: 'treatment',   iconClass: 'red',    title: "Today's Dose",        sub: 'Missed — 8:00 AM',                status: 'missed', screen: 'patient-treatment' },
         { iconName: 'reaction',    iconClass: 'yellow', title: 'Reaction Check',      sub: 'Skipped — dose not taken',        status: 'skipped',screen: 'today-reaction-placeholder' },
         { iconName: 'food',        iconClass: 'teal',   title: 'Food Intake',         sub: 'Record today\'s meals',           status: 'pending',screen: 'today-food-placeholder' },
-      ])}
+      ], { done: 1, total: 4, statusText: 'Missed', statusColor: 'var(--s2b-urgent)' })}
     </div>
 
     <div class="today-section-header">
@@ -989,7 +1320,6 @@ SCREENS['today-state-f'] = () => `
           <div class="notif-dot"></div>
         </div>
       </div>
-      ${statusRing(50, 2, 4, 'ring-on-track')}
     </div>
 
     <!-- Care team message alert -->
@@ -1012,11 +1342,15 @@ SCREENS['today-state-f'] = () => `
     </div>
 
     <div class="today-section-header">
-      <div class="today-section-title">Today's Dose</div>
+      <div class="today-section-title">Today's Doses</div>
       <div class="today-section-link" onclick="showScreen('patient-treatment')">View Plan</div>
     </div>
     <div class="today-section">
-      ${todayDoseCard('upcoming', '5 mg', '8:00', 'AM', 'Take with food after breakfast · Please read care team message first', 'View Dose', 'view-dose-f', 'I Did Not Take It', 'missed-f', 'today-state-e')}
+      ${todayDosesList([
+        { period: 'Morning', name: 'Medication / Food Dose', time: '8:00 AM', state: 'taken', takenTime: '8:00 AM', doseAmt: '5 mg', desc: 'Taken with food after breakfast' },
+        { period: 'Afternoon', name: 'Medication / Food Dose', time: '1:00 PM', state: 'due-now', doseAmt: '5 mg', desc: 'Please read your care team message before taking' },
+        { period: 'Night', name: 'Medication / Food Dose', time: '8:00 PM', state: 'upcoming', doseAmt: '5 mg', desc: 'Scheduled evening dose' }
+      ])}
     </div>
 
     <div class="today-section-header">
@@ -1028,7 +1362,7 @@ SCREENS['today-state-f'] = () => `
         { iconName: 'treatment',   iconClass: 'blue',   title: "Today's Dose",        sub: '5 mg · Pending',                  status: 'pending', screen: 'patient-treatment' },
         { iconName: 'reaction',    iconClass: 'yellow', title: 'Reaction Check',      sub: 'After dose · 30 min observation', status: 'pending', screen: 'today-reaction-placeholder' },
         { iconName: 'food',        iconClass: 'green',  title: 'Food Intake',         sub: '2 meals recorded',               status: 'done',    screen: 'today-food-placeholder' },
-      ])}
+      ], { done: 2, total: 4, statusText: 'Due Now', statusColor: 'var(--s2b-teal)' })}
     </div>
 
     <div class="today-section-header">
@@ -1062,7 +1396,6 @@ SCREENS['today-state-g'] = () => `
           <div class="notif-dot"></div>
         </div>
       </div>
-      ${statusRing(25, 1, 4, 'ring-critical')}
     </div>
 
     <!-- Critical banner -->
@@ -1078,10 +1411,14 @@ SCREENS['today-state-g'] = () => `
     </div>
 
     <div class="today-section-header">
-      <div class="today-section-title">Today's Dose — Hold</div>
+      <div class="today-section-title">Today's Doses — Hold</div>
     </div>
     <div class="today-section">
-      ${todayDoseCard('needs-review', '5 mg', '8:00', 'AM', 'Do not take this dose until you have spoken with your care team. This is a precaution — your care team will confirm next steps.', 'Contact Care Team', 'contact-g')}
+      ${todayDosesList([
+        { period: 'Morning', name: 'Medication / Food Dose', time: '8:00 AM', state: 'needs-review', doseAmt: '5 mg', desc: 'Do not take this dose until you have spoken with your care team.' },
+        { period: 'Afternoon', name: 'Medication / Food Dose', time: '1:00 PM', state: 'needs-review', doseAmt: '5 mg', desc: 'On Hold — Awaiting Care Team' },
+        { period: 'Night', name: 'Medication / Food Dose', time: '8:00 PM', state: 'needs-review', doseAmt: '5 mg', desc: 'On Hold — Awaiting Care Team' }
+      ])}
     </div>
 
     <div class="today-section-header">
@@ -1093,7 +1430,7 @@ SCREENS['today-state-g'] = () => `
         { iconName: 'treatment',   iconClass: 'red',    title: "Today's Dose",        sub: 'On hold — awaiting guidance',  status: 'missed',  screen: 'patient-treatment' },
         { iconName: 'reaction',    iconClass: 'yellow', title: 'Reaction Check',      sub: 'Pending dose decision',         status: 'pending', screen: 'today-reaction-placeholder' },
         { iconName: 'food',        iconClass: 'teal',   title: 'Food Intake',         sub: 'Record today\'s meals',         status: 'pending', screen: 'today-food-placeholder' },
-      ])}
+      ], { done: 1, total: 4, statusText: 'Missed', statusColor: 'var(--s2b-urgent)' })}
     </div>
 
     <div class="today-section-header">
@@ -1271,29 +1608,305 @@ SCREENS['today-food-placeholder'] = () => `
   </div>`;
 
 // ─────────────────────────────────────────────
-// PLACEHOLDER: EMERGENCY (→ Future Pass)
+// PASS 3: EMERGENCY HELP & PROTOCOL
 // ─────────────────────────────────────────────
+let currentScreenId = 'splash';
+let previousPatientScreen = 'patient-today';
+
+const PATIENT_SOS_SCREENS = new Set([
+  'patient-today',
+  'today-state-a',
+  'today-state-c',
+  'today-state-d',
+  'today-state-e',
+  'today-state-f',
+  'today-state-g',
+  'today-loading',
+  'today-error',
+  'today-assessment-placeholder',
+  'today-reaction-placeholder',
+  'today-food-placeholder',
+  'patient-treatment',
+  'patient-progress',
+  'patient-care',
+  'patient-profile',
+  'patient-prescriptions',
+  'patient-prescription-refills',
+  'patient-refill-request',
+  'patient-refill-success'
+]);
+
+let emergencyState = {
+  epiPenGiven: false,
+  epiPenTime: null,
+  careTeamNotified: false,
+  careTeamTime: null
+};
+
+function triggerSos() {
+  if (currentScreenId && currentScreenId !== 'today-emergency-placeholder') {
+    previousPatientScreen = currentScreenId;
+  }
+  showScreen('today-emergency-placeholder');
+}
+
+function returnFromEmergency() {
+  showScreen(previousPatientScreen || 'patient-today');
+}
+
+function handleEmergencyCall(type) {
+  const container = document.getElementById('phone-screen');
+  if (!container) return;
+  const existing = container.querySelector('.emergency-call-toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'emergency-call-toast';
+  if (type === '911') {
+    toast.innerHTML = `
+      <div style="font-size:13px; font-weight:800; color:#fff;">🚨 Emergency Call Initiated: 911</div>
+      <div style="font-size:11px; color:rgba(255,255,255,0.92); margin-top:3px; line-height:1.4;">
+        Direct dispatch connected. Inform operator of peanut OIT anaphylaxis.
+      </div>
+    `;
+  } else {
+    toast.style.background = '#1e3a8a';
+    toast.innerHTML = `
+      <div style="font-size:13px; font-weight:800; color:#fff;">🩺 Connecting to Safe2Bite Emergency Line</div>
+      <div style="font-size:11px; color:rgba(255,255,255,0.92); margin-top:3px; line-height:1.4;">
+        Dialing 1-800-555-SAFE. On-call clinical triage specialist standing by.
+      </div>
+    `;
+  }
+  container.appendChild(toast);
+  setTimeout(() => { if (toast && toast.parentNode) toast.remove(); }, 4200);
+}
+
+function recordEpiPenGiven() {
+  emergencyState.epiPenGiven = true;
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  emergencyState.epiPenTime = timeStr;
+  
+  const box = document.getElementById('epipen-status-box');
+  if (box) {
+    box.innerHTML = `
+      <div style="background:#dcfce7; border:1px solid #86efac; border-radius:8px; padding:9px 12px; display:flex; align-items:center; gap:8px;">
+        <span style="color:#15803d; font-weight:800; font-size:15px;">✓</span>
+        <div style="font-size:12px; color:#166534; font-weight:600;">
+          Epinephrine administered at <strong>${timeStr}</strong>
+          <div style="font-size:11px; font-weight:400; color:#15803d; margin-top:1px;">15-minute observation window active. If symptoms persist, prep 2nd dose.</div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function notifyCareTeamEmergency() {
+  emergencyState.careTeamNotified = true;
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  emergencyState.careTeamTime = timeStr;
+
+  const resultBox = document.getElementById('care-team-alert-result');
+  if (resultBox) {
+    resultBox.innerHTML = `
+      <div style="background:#eff6ff; border:1px solid #93c5fd; border-radius:12px; padding:10px 14px; display:flex; align-items:flex-start; gap:10px;">
+        <span style="color:#1d4ed8; font-size:18px; font-weight:bold;">✓</span>
+        <div style="flex:1;">
+          <div style="font-size:13px; font-weight:700; color:#1e40af;">Care Team Alerted (${timeStr})</div>
+          <div style="font-size:11px; color:#2563eb; margin-top:2px; line-height:1.4;">
+            Dr. Robert Chen and on-call triage clinicians received priority emergency notification.
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function ensureFloatingSos() {
+  const frame = document.getElementById('phone-frame');
+  if (!frame) return;
+  let btn = document.getElementById('floating-sos-btn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'floating-sos-btn';
+    btn.className = 'floating-sos-btn';
+    btn.setAttribute('aria-label', 'Emergency Help SOS');
+    btn.setAttribute('title', 'Immediate Emergency Help');
+    btn.onclick = triggerSos;
+    btn.innerHTML = `
+      <span class="sos-pulse-ring"></span>
+      <span class="sos-btn-icon">${icon('emergency', 17, '#ffffff', 2.2)}</span>
+      <span class="sos-btn-text">SOS</span>
+    `;
+    frame.appendChild(btn);
+  }
+}
+
 SCREENS['today-emergency-placeholder'] = () => `
-  <div class="placeholder-screen">
-    ${statusBar('var(--surface-base)')}
-    <div style="padding:8px 20px 12px; display:flex; align-items:center; gap:10px;">
-      <button style="background:none;border:none;cursor:pointer;padding:4px;" onclick="showScreen('patient-today')" id="back-emergency-btn">${icon('arrow-left', 22, 'var(--s2b-blue)')}</button>
-      <div style="font-size:17px; font-weight:700; color:var(--s2b-blue);">Emergency Help</div>
+  <div class="emergency-screen">
+    ${statusBar('#fff7f7')}
+    
+    <!-- HEADER -->
+    <div style="padding:10px 18px 8px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #fecaca; background:#ffffff;">
+      <button style="background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center;gap:5px;font-size:14px;font-weight:700;color:#b91c1c;" onclick="returnFromEmergency()" id="back-emergency-btn" aria-label="Back">
+        ${icon('arrow-left', 20, '#b91c1c', 2.2)} Back
+      </button>
+      <div style="display:flex;align-items:center;gap:6px;background:#fee2e2;padding:4px 10px;border-radius:12px;border:1px solid #fca5a5;">
+        <span class="emergency-live-dot"></span>
+        <span style="font-size:11px;font-weight:800;letter-spacing:0.06em;color:#b91c1c;text-transform:uppercase;">Emergency Protocol</span>
+      </div>
+      <div style="width:40px;"></div>
     </div>
-    <div class="placeholder-body">
-      <div class="placeholder-pass-badge">Coming in a Future Pass</div>
-      <div class="placeholder-icon-circle" style="background:var(--s2b-urgent-bg); border-color:#f0c4c4;">${icon('emergency', 36, 'var(--s2b-urgent)', 1.75)}</div>
-      <div class="placeholder-title">Emergency Protocol</div>
-      <div class="placeholder-desc">The Emergency workflow will provide guided steps for severe allergic reactions, direct contact with the Safe2Bite emergency line, and pre-filled medical information for first responders. All content is clinician-authored.</div>
-      <button class="btn btn-secondary" style="max-width:240px; font-size:14px; border-radius:var(--radius-full);" onclick="showScreen('patient-today')" id="back-to-today-emergency">Back to Today</button>
+
+    <div style="flex:1; overflow-y:auto; scrollbar-width:none; padding:16px 18px 30px;">
+      
+      <!-- HERO ALERT BANNER -->
+      <div class="emergency-hero-alert">
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div class="emergency-hero-icon">${icon('emergency', 26, '#ffffff', 2.2)}</div>
+          <div style="flex:1;">
+            <div style="font-size:17px; font-weight:800; color:#ffffff; line-height:1.2;">Severe Allergic Reaction?</div>
+            <div style="font-size:11.5px; color:rgba(255,255,255,0.92); margin-top:4px; line-height:1.4;">
+              If you have trouble breathing, throat tightness, swelling, dizziness, or widespread hives:
+            </div>
+          </div>
+        </div>
+        
+        <!-- PRIMARY 1-TAP 911 CALL -->
+        <a href="tel:911" class="btn-emergency-call-911" onclick="handleEmergencyCall('911')" id="btn-call-911" aria-label="Call 911 Now">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="call-icon-wrap">${icon('phone', 20, '#b91c1c', 2.4)}</div>
+            <div style="text-align:left;">
+              <div style="font-size:16px; font-weight:900; letter-spacing:0.04em; color:#ffffff;">CALL 911 NOW</div>
+              <div style="font-size:11px; color:rgba(255,255,255,0.85); font-weight:500;">Direct Emergency Dispatch</div>
+            </div>
+          </div>
+          <span style="font-size:18px; font-weight:700; color:#ffffff;">➔</span>
+        </a>
+      </div>
+
+      <!-- SECONDARY: CLINICAL TRIAGE HOTLINE -->
+      <a href="tel:18005557233" class="btn-emergency-call-clinic" onclick="handleEmergencyCall('clinic')" id="btn-call-clinic" aria-label="Call Safe2Bite On-Call Allergist">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:36px; height:36px; border-radius:10px; background:#fef2f2; display:flex; align-items:center; justify-content:center; color:#dc2626; flex-shrink:0;">
+            ${icon('care', 20, '#dc2626', 2)}
+          </div>
+          <div style="flex:1; text-align:left;">
+            <div style="font-size:12.5px; font-weight:700; color:#991b1b;">Safe2Bite 24/7 Clinical Emergency Line</div>
+            <div style="font-size:11px; color:#b91c1c; font-weight:500;">1-800-555-SAFE · On-Call Allergist & Nurse</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- STEP-BY-STEP ACTION PROTOCOL -->
+      <div style="margin-top:20px;">
+        <div style="font-size:13.5px; font-weight:800; color:#1e293b; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+          ${icon('shield', 16, 'var(--s2b-blue)')} Clinician-Guided Emergency Steps
+        </div>
+
+        <div class="emergency-step-card">
+          <div class="emergency-step-num">1</div>
+          <div style="flex:1;">
+            <div class="emergency-step-title">Administer Epinephrine (EpiPen / Auvi-Q)</div>
+            <div class="emergency-step-desc">Inject into the outer-middle thigh. Hold firmly for 3 seconds. Do not wait to see if symptoms get worse.</div>
+            <div id="epipen-status-box" style="margin-top:8px;">
+              <button class="btn-epipen-action" onclick="recordEpiPenGiven()" id="btn-record-epipen">
+                ${icon('check', 14, '#ffffff', 2.5)} Mark Epinephrine Given
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="emergency-step-card">
+          <div class="emergency-step-num">2</div>
+          <div style="flex:1;">
+            <div class="emergency-step-title">Call 911 Immediately</div>
+            <div class="emergency-step-desc">Tell the dispatcher: "I am having an anaphylactic reaction to a peanut immunotherapy dose. Epinephrine has been given."</div>
+          </div>
+        </div>
+
+        <div class="emergency-step-card">
+          <div class="emergency-step-num">3</div>
+          <div style="flex:1;">
+            <div class="emergency-step-title">Lay Flat & Elevate Feet</div>
+            <div class="emergency-step-desc">Do not stand up or walk. If breathing is difficult, sitting propped up is okay. If vomiting, lay on side.</div>
+          </div>
+        </div>
+
+        <div class="emergency-step-card">
+          <div class="emergency-step-num">4</div>
+          <div style="flex:1;">
+            <div class="emergency-step-title">Prepare Second Epinephrine Dose</div>
+            <div class="emergency-step-desc">If symptoms do not improve within 5 to 15 minutes, administer a second epinephrine auto-injector in opposite thigh.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FIRST RESPONDER MEDICAL ID -->
+      <div style="margin-top:20px;">
+        <div style="font-size:13.5px; font-weight:800; color:#1e293b; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+          ${icon('user', 16, 'var(--s2b-blue)')} First Responder Medical ID
+        </div>
+        <div class="emergency-medical-id">
+          <div class="medical-id-row">
+            <span class="medical-id-label">Patient Name:</span>
+            <span class="medical-id-value">Alex Johnson (28 yrs)</span>
+          </div>
+          <div class="medical-id-row">
+            <span class="medical-id-label">Active Protocol:</span>
+            <span class="medical-id-value" style="color:#b91c1c; font-weight:700;">Peanut OIT (Maintenance 5 mg)</span>
+          </div>
+          <div class="medical-id-row">
+            <span class="medical-id-label">Primary Allergen:</span>
+            <span class="medical-id-value">Peanut (Severe IgE Mediated)</span>
+          </div>
+          <div class="medical-id-row">
+            <span class="medical-id-label">Emergency Contact:</span>
+            <span class="medical-id-value">Sarah Miller (Spouse) · (555) 234-5678</span>
+          </div>
+          <div class="medical-id-row" style="border-bottom:none;">
+            <span class="medical-id-label">Treating Allergist:</span>
+            <span class="medical-id-value">Dr. Robert Chen, MD · Safe2Bite Allergy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFY CARE TEAM -->
+      <div style="margin-top:16px;">
+        <div id="care-team-alert-result">
+          <button class="btn-notify-care-team" onclick="notifyCareTeamEmergency()" id="btn-notify-care-team">
+            ${icon('bell', 16, 'var(--s2b-blue)', 2)} Send Urgent Emergency Alert to Care Team
+          </button>
+        </div>
+      </div>
+
+      <!-- RETURN BUTTON -->
+      <div style="margin-top:16px; text-align:center;">
+        <button class="btn btn-secondary" style="width:100%; border-radius:var(--radius-full); font-size:14px;" onclick="returnFromEmergency()" id="dismiss-emergency-btn">
+          Return to Safe2Bite
+        </button>
+      </div>
+
     </div>
+
     ${patientNav('today')}
   </div>`;
 
-INFO['today-assessment-placeholder'] = { screen: 'Health Assessment Placeholder', role: 'patient', desc: 'Placeholder for Pass 4 — Daily Health Assessment flow. Shows which pass will build this screen.', ia: [], notes: '' };
-INFO['today-reaction-placeholder']   = { screen: 'Reaction Check Placeholder',    role: 'patient', desc: 'Placeholder for Pass 6 — Reaction Reporting flow.', ia: [], notes: '' };
-INFO['today-food-placeholder']       = { screen: 'Food Intake Placeholder',        role: 'patient', desc: 'Placeholder for Pass 7 — Food Intake Log flow.', ia: [], notes: '' };
-INFO['today-emergency-placeholder']  = { screen: 'Emergency Help Placeholder',     role: 'patient', desc: 'Placeholder for future pass — Emergency Protocol flow. Content is clinician-controlled.', ia: [], notes: '' };
+INFO['today-emergency-placeholder']  = {
+  screen: 'Pass 3 — Emergency Help & Protocol',
+  role: 'patient',
+  desc: 'Rapid-response emergency protocol and immediate action flow for severe allergic reactions or anaphylaxis. Features 1-tap 911 dispatch, 24/7 on-call clinical hotline, 4-step guided Epinephrine procedure, First Responder Medical ID card, and instant care team notification.',
+  ia: [
+    { title: 'Immediate 911 Call', body: 'Direct 1-tap emergency dialer for EMS' },
+    { title: '24/7 Clinical Line', body: 'Hotline to Safe2Bite on-call allergy physicians' },
+    { title: 'Epinephrine Protocol', body: 'Clinician-guided steps for auto-injector administration and observation' },
+    { title: 'First Responder Medical ID', body: 'Patient OIT protocol, dose history, and primary emergency contact' },
+    { title: 'Care Team Urgent Alert', body: 'Instant push transmission to treating doctor and clinic staff' }
+  ],
+  notes: 'Accessible globally across major patient-facing screens via the persistent floating SOS button.'
+};
 INFO['today-state-a'] = INFO['today-state-a'] || { screen: 'Today — State A', role: 'patient', desc: 'Morning, nothing started.', ia: [], notes: '' };
 INFO['today-state-c'] = INFO['today-state-c'] || { screen: 'Today — State C', role: 'patient', desc: 'All tasks complete.', ia: [], notes: '' };
 INFO['today-state-d'] = INFO['today-state-d'] || { screen: 'Today — State D', role: 'patient', desc: 'Dose due now.', ia: [], notes: '' };
@@ -1345,6 +1958,25 @@ SCREENS['patient-treatment'] = () => `
             <div class="alert-title">Instructions from Your Care Team</div>
             <div class="alert-body">Take your dose with food. Wait 2 hours before exercise. Contact your care team if you experience any symptoms.</div>
           </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Medications & Prescriptions Quick Access -->
+    <div class="card-section">
+      <div class="card-section-title">Medications &amp; Prescriptions</div>
+      <div class="card" style="padding:14px 16px; border:1px solid #fed7aa; background:#fffdfa; cursor:pointer;" onclick="showScreen('patient-prescriptions')">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:38px; height:38px; border-radius:10px; background:#ffedd5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              ${icon('dose', 20, '#ea580c', 2)}
+            </div>
+            <div>
+              <div style="font-size:13px; font-weight:700; color:var(--text-dark);">Active Prescriptions</div>
+              <div style="font-size:11.5px; color:var(--text-secondary); margin-top:1px;">Epinephrine: <strong style="color:var(--s2b-warning);">2 left</strong> · Antihistamine: <strong style="color:var(--s2b-urgent);">Refill needed</strong></div>
+            </div>
+          </div>
+          <span style="font-size:12px; font-weight:700; color:var(--s2b-teal);">Manage Refills &rarr;</span>
         </div>
       </div>
     </div>
@@ -1404,7 +2036,7 @@ SCREENS['patient-progress'] = () => `
     <div class="mobile-header">
       <div>
         <div class="header-title">Progress</div>
-        <div class="header-subtitle">Your treatment journey</div>
+        <div class="header-subtitle">Your treatment journey &amp; adherence</div>
       </div>
     </div>
     
@@ -1417,30 +2049,83 @@ SCREENS['patient-progress'] = () => `
               <circle cx="35" cy="35" r="30" fill="none" stroke="var(--border-light)" stroke-width="6"/>
               <circle cx="35" cy="35" r="30" fill="none" stroke="var(--s2b-teal)" stroke-width="6" stroke-dasharray="188" stroke-dashoffset="71" stroke-linecap="round" transform="rotate(-90 35 35)"/>
             </svg>
-            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; color:var(--s2b-blue);">62%</div>
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; color:var(--s2b-teal);">62%</div>
           </div>
           <div>
-            <div style="font-size:15px; font-weight:700; color:var(--text-dark); margin-bottom:4px;">Phase 2: Buildup</div>
+            <div style="font-size:15px; font-weight:700; color:var(--text-dark); margin-bottom:2px;">Phase 2: Buildup</div>
             <div style="font-size:12px; color:var(--text-secondary);">Week 6 of estimated 10 weeks</div>
-            <div class="status-badge completed" style="margin-top:6px;">● On Track</div>
+            <div class="status-badge active" style="margin-top:6px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:var(--s2b-teal); display:inline-block;"></span>
+              Active · In Progress
+            </div>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- Stats Row -->
+    <!-- Stats Row with Semantic Status Colors -->
     <div class="stat-row">
-      <div class="stat-card">
+      <div class="stat-card current" title="Current Adherence Rate">
         <div class="stat-value">94%</div>
         <div class="stat-label">Adherence</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card taken" title="Doses Successfully Taken">
         <div class="stat-value">42</div>
-        <div class="stat-label">Doses Taken</div>
+        <div class="stat-label">Taken</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card missed" title="Missed Doses (Requires Attention)">
         <div class="stat-value">2</div>
         <div class="stat-label">Missed</div>
+      </div>
+    </div>
+
+    <!-- 7-Day Adherence Timeline with Semantic Colors -->
+    <div style="padding:0 20px 16px;">
+      <div class="card" style="padding:14px 16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div style="font-size:13px; font-weight:700; color:var(--text-dark);">Recent Dose Adherence</div>
+          <span class="status-badge completed" style="font-size:10px; padding:2px 8px;">Completed 5 of 6</span>
+        </div>
+
+        <div class="progress-calendar-grid">
+          <div class="progress-calendar-col">
+            <span class="progress-calendar-day">Mon</span>
+            <div class="progress-calendar-dot taken" title="Taken">${icon('check', 14, '#15803d', 2.6)}</div>
+          </div>
+          <div class="progress-calendar-col">
+            <span class="progress-calendar-day">Tue</span>
+            <div class="progress-calendar-dot taken" title="Taken">${icon('check', 14, '#15803d', 2.6)}</div>
+          </div>
+          <div class="progress-calendar-col">
+            <span class="progress-calendar-day">Wed</span>
+            <div class="progress-calendar-dot missed" title="Missed Dose">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+          </div>
+          <div class="progress-calendar-col">
+            <span class="progress-calendar-day">Thu</span>
+            <div class="progress-calendar-dot taken" title="Taken">${icon('check', 14, '#15803d', 2.6)}</div>
+          </div>
+          <div class="progress-calendar-col">
+            <span class="progress-calendar-day">Fri</span>
+            <div class="progress-calendar-dot taken" title="Taken">${icon('check', 14, '#15803d', 2.6)}</div>
+          </div>
+          <div class="progress-calendar-col">
+            <span class="progress-calendar-day">Sat</span>
+            <div class="progress-calendar-dot active" title="Current / Active">${icon('dose', 13, 'var(--s2b-teal-dark)', 2)}</div>
+          </div>
+          <div class="progress-calendar-col">
+            <span class="progress-calendar-day">Sun</span>
+            <div class="progress-calendar-dot upcoming" title="Upcoming / Pending">${icon('clock', 12, 'var(--text-muted)', 2)}</div>
+          </div>
+        </div>
+
+        <div class="semantic-legend-row">
+          <div class="semantic-legend-item"><span class="semantic-legend-dot taken"></span> <span style="color:#15803d;">Taken</span></div>
+          <div class="semantic-legend-item"><span class="semantic-legend-dot missed"></span> <span style="color:var(--s2b-urgent);">Missed</span></div>
+          <div class="semantic-legend-item"><span class="semantic-legend-dot active"></span> <span style="color:var(--s2b-teal-dark);">Active</span></div>
+          <div class="semantic-legend-item"><span class="semantic-legend-dot upcoming"></span> <span style="color:var(--text-secondary);">Upcoming</span></div>
+        </div>
       </div>
     </div>
     
@@ -1449,11 +2134,11 @@ SCREENS['patient-progress'] = () => `
       <div class="card-section-title">History &amp; Records</div>
       <div class="card" style="padding:0;">
         ${[
-          { iconName: 'treatment',  iconColor: 'var(--s2b-blue)',      bg: 'var(--s2b-blue-light)',    label: 'Dose History',          sub: '44 recorded doses',                       badge: null },
-          { iconName: 'activity',   iconColor: 'var(--s2b-attention)', bg: 'var(--s2b-attention-bg)', label: 'Reaction History',       sub: '1 mild reaction logged',                  badge: 'attention' },
-          { iconName: 'illness',    iconColor: 'var(--text-secondary)',bg: 'var(--surface-base)',      label: 'Illness History',        sub: '0 illness reports',                       badge: null },
-          { iconName: 'clipboard',  iconColor: 'var(--s2b-blue)',      bg: 'var(--s2b-blue-light)',    label: 'Assessment History',     sub: '38 assessments completed',                badge: null },
-          { iconName: 'award',      iconColor: 'var(--s2b-teal)',      bg: 'var(--s2b-teal-light)',    label: 'Treatment Milestones',   sub: 'Phase 1 complete · Phase 2 in progress',  badge: null },
+          { iconName: 'treatment',  iconColor: 'var(--s2b-blue)',      bg: 'var(--s2b-blue-light)',    label: 'Dose History',          sub: '44 recorded doses · <span style="color:var(--s2b-success);font-weight:700;">42 Taken</span>, <span style="color:var(--s2b-urgent);font-weight:700;">2 Missed</span>', badge: null },
+          { iconName: 'activity',   iconColor: 'var(--s2b-attention)', bg: 'var(--s2b-attention-bg)', label: 'Reaction History',       sub: '1 mild reaction logged · Monitored',     badge: 'attention' },
+          { iconName: 'illness',    iconColor: 'var(--text-secondary)',bg: 'var(--surface-base)',      label: 'Illness History',        sub: '0 illness reports · Normal',              badge: null },
+          { iconName: 'clipboard',  iconColor: 'var(--s2b-blue)',      bg: 'var(--s2b-blue-light)',    label: 'Assessment History',     sub: '<span style="color:var(--s2b-success);font-weight:600;">38 Completed</span> · <span style="color:var(--text-secondary);">1 Pending</span>', badge: null },
+          { iconName: 'award',      iconColor: 'var(--s2b-teal)',      bg: 'var(--s2b-teal-light)',    label: 'Treatment Milestones',   sub: '<span style="color:var(--s2b-success);font-weight:600;">Phase 1 Completed</span> · <span style="color:var(--s2b-teal);font-weight:600;">Phase 2 Active</span>', badge: null },
         ].map(i => `
           <div class="list-item">
             <div class="list-item-icon" style="background:${i.bg};">${icon(i.iconName, 20, i.iconColor)}</div>
@@ -1473,14 +2158,15 @@ SCREENS['patient-progress'] = () => `
 INFO['patient-progress'] = {
   screen: 'Patient — Progress',
   role: 'patient',
-  desc: 'Treatment progress overview with adherence stats, history records, and milestones.',
+  desc: 'Treatment progress overview with adherence stats, semantic status indicators (Taken/Completed in Green, Missed in Red, Active/Current in Teal, Upcoming/Pending in Neutral), 7-day adherence tracker, and milestones.',
   ia: [
-    { title: 'Progress Ring', body: 'Visual % complete for current phase' },
-    { title: 'Stats', body: 'Adherence %, total doses, missed doses' },
-    { title: 'Dose History', body: 'Full chronological dose log' },
+    { title: 'Progress Ring', body: 'Visual % complete for current phase with active status' },
+    { title: 'Semantic Stats', body: 'Taken (Green), Missed (Red), and Adherence (Teal)' },
+    { title: 'Recent Adherence Tracker', body: '7-day daily adherence history showing Taken, Missed, Active, and Upcoming' },
+    { title: 'Dose History', body: 'Full chronological dose log with taken vs missed counts' },
     { title: 'Reaction History', body: 'Logged reactions with severity' },
     { title: 'Illness History', body: 'Illness-related dose holds' },
-    { title: 'Assessment History', body: 'All completed assessments' },
+    { title: 'Assessment History', body: 'All completed and pending assessments' },
     { title: 'Milestones', body: 'Phase completions and achievements' },
   ]
 };
@@ -1589,13 +2275,18 @@ SCREENS['patient-profile'] = () => `
       <div class="card-section-title">Account</div>
       <div class="card" style="padding:0;">
         ${[
-          { iconName: 'user',             iconColor: 'var(--s2b-blue)', bg: 'var(--s2b-blue-light)',  label: 'Personal Information' },
-          { iconName: 'phone',            iconColor: 'var(--s2b-blue)', bg: 'var(--s2b-blue-light)',  label: 'Emergency Contact' },
-          { iconName: 'role-caregiver',   iconColor: 'var(--s2b-blue)', bg: 'var(--s2b-blue-light)',  label: 'Caregiver Access' },
+          { iconName: 'user',             iconColor: 'var(--s2b-blue)', bg: 'var(--s2b-blue-light)', label: 'Personal Information' },
+          { iconName: 'dose',             iconColor: 'var(--s2b-blue)', bg: 'var(--s2b-blue-light)', label: 'Medications & Prescriptions', sub: '3 active · Refill needed', badge: 'urgent', badgeText: 'Refill Needed', screen: 'patient-prescriptions' },
+          { iconName: 'phone',            iconColor: 'var(--s2b-blue)', bg: 'var(--s2b-blue-light)', label: 'Emergency Contact' },
+          { iconName: 'role-caregiver',   iconColor: 'var(--s2b-blue)', bg: 'var(--s2b-blue-light)', label: 'Caregiver Access' },
         ].map(i => `
-          <div class="list-item">
+          <div class="list-item" ${i.screen ? `onclick="showScreen('${i.screen}')" style="cursor:pointer;"` : ''}>
             <div class="list-item-icon" style="background:${i.bg};">${icon(i.iconName, 20, i.iconColor)}</div>
-            <div class="list-item-content"><div class="list-item-title">${i.label}</div></div>
+            <div class="list-item-content">
+              <div class="list-item-title">${i.label}</div>
+              ${i.sub ? `<div class="list-item-subtitle">${i.sub}</div>` : ''}
+            </div>
+            ${i.badge ? `<span class="status-badge ${i.badge}" style="font-size:10px; margin-right:6px;">${i.badgeText || 'Alert'}</span>` : ''}
             <span class="list-item-chevron">›</span>
           </div>`).join('')}
       </div>
@@ -1639,6 +2330,758 @@ INFO['patient-profile'] = {
     { title: 'Support', body: 'Help center and contact' },
   ]
 };
+
+// ─────────────────────────────────────────────
+// PRESCRIPTION REFILLS STATE & FUNCTIONS
+// ─────────────────────────────────────────────
+if (!window.prescriptionsState) {
+  window.prescriptionsState = {
+    prescriptions: [
+      {
+        id: 'rx-epi',
+        name: 'Epinephrine Auto-Injector 0.3mg',
+        form: '2 Auto-Injectors (2-Pack)',
+        prescribedBy: 'Dr. Sarah Chen, Allergist',
+        rxNumber: 'RX-8849201',
+        remainingQty: 0,
+        remainingUnit: 'remaining',
+        expiresInDays: 14,
+        expiryDate: 'Sep 26, 2026',
+        conditionStatus: 'urgent',
+        statusLabel: '0 remaining · Refill needed',
+        urgent: true,
+        source: 'Care Team Prescribed',
+        lastFilled: 'Jun 12, 2026'
+      },
+      {
+        id: 'rx-cetirizine',
+        name: 'Antihistamine Tablets (Cetirizine 10mg)',
+        form: 'Oral Tablets · 30ct Bottle',
+        prescribedBy: 'Dr. Sarah Chen, Allergist',
+        rxNumber: 'RX-7734190',
+        remainingQty: 2,
+        remainingUnit: 'remaining',
+        expiresInDays: 14,
+        expiryDate: 'Sep 26, 2026',
+        conditionStatus: 'low',
+        statusLabel: '2 remaining · Refill recommended',
+        urgent: false,
+        source: 'Care Team Prescribed',
+        lastFilled: 'Jul 28, 2026'
+      },
+      {
+        id: 'rx-peanut-powder',
+        name: 'Peanut Protein OIT Formulation',
+        form: 'Maintenance Daily Sachet · 12mg',
+        prescribedBy: 'Dr. Sarah Chen, Allergist',
+        rxNumber: 'RX-9921045',
+        remainingQty: 18,
+        remainingUnit: 'remaining',
+        expiresInDays: 60,
+        expiryDate: 'Nov 11, 2026',
+        conditionStatus: 'normal',
+        statusLabel: '18 remaining · Normal supply',
+        urgent: false,
+        source: 'Care Team Prescribed',
+        lastFilled: 'Aug 20, 2026'
+      }
+    ],
+    pharmacies: [
+      {
+        id: 'pharm-abc',
+        name: 'ABC Pharmacy',
+        address: '123 Main Street, Suite 100',
+        cityState: 'Springfield, IL 62701',
+        phone: '(555) 234-5678',
+        preferred: true
+      },
+      {
+        id: 'pharm-walgreens',
+        name: 'Walgreens Pharmacy #1402',
+        address: '450 Oak Avenue',
+        cityState: 'Springfield, IL 62704',
+        phone: '(555) 876-5432',
+        preferred: false
+      },
+      {
+        id: 'pharm-childrens',
+        name: 'Children\'s Hospital Outpatient Pharmacy',
+        address: '700 Health Parkway, Bldg B',
+        cityState: 'Springfield, IL 62702',
+        phone: '(555) 345-9000',
+        preferred: false
+      }
+    ],
+    selectedPharmacyId: 'pharm-abc',
+    requests: [
+      {
+        id: 'req-1',
+        prescriptionId: 'rx-epi',
+        medicationName: 'Epinephrine Auto-Injector 0.3mg',
+        requestedDate: 'Today, 10:15 AM',
+        pharmacyName: 'ABC Pharmacy',
+        status: 'pending',
+        note: 'I am almost out. Need for school bag and home kit.'
+      },
+      {
+        id: 'req-2',
+        prescriptionId: 'rx-cetirizine',
+        medicationName: 'Antihistamine Tablets (Cetirizine 10mg)',
+        requestedDate: 'Aug 20, 2026',
+        pharmacyName: 'ABC Pharmacy',
+        status: 'approved',
+        note: 'Authorized by Dr. Sarah Chen on Aug 21.'
+      }
+    ],
+    activeModal: null,
+    targetRxId: 'rx-epi',
+    lastSubmittedRequest: null
+  };
+}
+
+window.startRefillRequest = function(rxId) {
+  window.prescriptionsState.targetRxId = rxId || 'rx-epi';
+  showScreen('patient-refill-request');
+};
+
+window.openRequestRefillModal = function(rxId) {
+  window.startRefillRequest(rxId);
+};
+
+window.selectRefillPharmacy = function(pharmId) {
+  window.prescriptionsState.selectedPharmacyId = pharmId;
+  window.prescriptionsState.activeModal = null;
+  showScreen(currentScreenId);
+};
+
+window.openPharmacyPicker = function() {
+  window.prescriptionsState.activeModal = 'pharmacy-picker';
+  showScreen(currentScreenId);
+};
+
+window.closeRefillModal = function() {
+  window.prescriptionsState.activeModal = null;
+  showScreen(currentScreenId);
+};
+
+window.setRefillNoteChip = function(text) {
+  const input = document.getElementById('refill-request-note');
+  if (input) {
+    input.value = text;
+    input.focus();
+  }
+};
+
+window.submitRefillRequest = function(rxId) {
+  const state = window.prescriptionsState;
+  const rx = state.prescriptions.find(p => p.id === (rxId || state.targetRxId)) || state.prescriptions[0];
+  const pharm = state.pharmacies.find(p => p.id === state.selectedPharmacyId) || state.pharmacies[0];
+  const noteEl = document.getElementById('refill-request-note');
+  const note = noteEl ? noteEl.value.trim() : '';
+
+  const newReq = {
+    id: 'req-' + Date.now(),
+    prescriptionId: rx ? rx.id : 'custom',
+    medicationName: rx ? rx.name : 'Prescription Refill',
+    requestedDate: 'Just now',
+    pharmacyName: pharm ? pharm.name : 'ABC Pharmacy',
+    status: 'pending',
+    note: note || 'Refill requested by patient.'
+  };
+
+  state.requests.unshift(newReq);
+  state.lastSubmittedRequest = newReq;
+  showScreen('patient-refill-success');
+};
+
+window.openAddPrescriptionModal = function() {
+  window.prescriptionsState.activeModal = 'add-rx';
+  showScreen('patient-prescriptions');
+};
+
+window.saveNewPrescription = function() {
+  const nameEl = document.getElementById('new-rx-name');
+  const formEl = document.getElementById('new-rx-form');
+  const qtyEl = document.getElementById('new-rx-qty');
+  const expEl = document.getElementById('new-rx-exp');
+
+  const name = nameEl ? nameEl.value.trim() : '';
+  if (!name) {
+    alert('Please enter a medication or prescription name.');
+    return;
+  }
+
+  const qty = qtyEl ? parseInt(qtyEl.value, 10) || 0 : 30;
+  const form = formEl && formEl.value.trim() ? formEl.value.trim() : 'Patient-Reported Medication';
+  const exp = expEl && expEl.value.trim() ? expEl.value.trim() : '60 days';
+
+  const condition = qty === 0 ? 'urgent' : (qty <= 3 ? 'low' : 'normal');
+  const statusLabel = qty === 0 ? '0 remaining · Refill needed' : (qty <= 3 ? `${qty} remaining · Refill recommended` : `${qty} remaining · Normal supply`);
+
+  const newPrescription = {
+    id: 'rx-' + Date.now(),
+    name: name,
+    form: form,
+    prescribedBy: 'Self-Reported / Patient Added',
+    rxNumber: 'PAT-' + Math.floor(100000 + Math.random() * 900000),
+    remainingQty: qty,
+    remainingUnit: 'remaining',
+    expiresInDays: 30,
+    expiryDate: exp,
+    conditionStatus: condition,
+    statusLabel: statusLabel,
+    source: 'Patient Added',
+    lastFilled: 'Recent'
+  };
+
+  window.prescriptionsState.prescriptions.push(newPrescription);
+  window.prescriptionsState.activeModal = null;
+  showScreen('patient-prescriptions');
+};
+
+// ─────────────────────────────────────────────
+// SCREEN 1: PATIENT — PRESCRIPTION REFILLS
+// ─────────────────────────────────────────────
+SCREENS['patient-prescriptions'] = () => {
+  const state = window.prescriptionsState;
+  const preferredPharm = state.pharmacies.find(p => p.id === state.selectedPharmacyId) || state.pharmacies[0];
+  const urgentCount = state.prescriptions.filter(p => p.conditionStatus === 'urgent').length;
+
+  return `
+  <div class="screen-full" style="background:var(--surface-base); min-height:780px;">
+    ${statusBar('var(--surface-base)')}
+
+    <!-- Header -->
+    <div class="mobile-header" style="background:var(--surface-base); border-bottom:1px solid var(--border-light); padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+      <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;">
+        <button style="background:none; border:none; cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; color:var(--s2b-blue); flex-shrink:0;" onclick="showScreen('patient-profile')" aria-label="Back to Profile" id="rx-back-btn">
+          ${icon('arrow-left', 22, 'var(--s2b-blue)')}
+        </button>
+        <div style="min-width:0;">
+          <div class="header-title" style="font-size:17px; font-weight:800; color:var(--s2b-blue); line-height:1.2;">Prescription Refills</div>
+          <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px; line-height:1.3;">Manage active prescriptions and refills</div>
+        </div>
+      </div>
+      <button onclick="openAddPrescriptionModal()" class="btn btn-secondary" style="font-size:12px; padding:7px 14px; border-radius:var(--radius-full); font-weight:700; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; flex-shrink:0;" id="add-rx-btn">
+        <span style="font-size:14px; line-height:1; font-weight:800; margin-top:-1px;">+</span> Add Rx
+      </button>
+    </div>
+
+    <div class="scrollable" style="padding:16px;">
+
+      <!-- Contextual Action Notice if Refill Needed -->
+      ${urgentCount > 0 ? `
+      <div style="background:var(--s2b-urgent-bg, #fff5f5); border:1.5px solid #feb2b2; border-radius:14px; padding:12px 14px; margin-bottom:16px; display:flex; align-items:flex-start; gap:12px;">
+        <div style="width:32px; height:32px; border-radius:50%; background:#fed7d7; color:var(--s2b-urgent); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13.5px; font-weight:800; color:var(--s2b-urgent);">Prescription Refill Needed</div>
+          <div style="font-size:12px; color:var(--text-secondary); margin-top:2px; line-height:1.45;">You have <strong>${urgentCount} prescription</strong> with 0 doses remaining. Request a refill to maintain uninterrupted emergency preparedness.</div>
+        </div>
+      </div>
+      ` : ''}
+
+      <!-- Preferred Pharmacy Card -->
+      <div class="card" style="margin-bottom:16px; border-radius:14px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; background:var(--surface-card); border:1.5px solid var(--border-light);">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:38px; height:38px; border-radius:10px; background:var(--s2b-teal-light); color:var(--s2b-teal-dark); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; color:var(--s2b-teal-dark);">Preferred Pharmacy</div>
+            <div style="font-size:14px; font-weight:700; color:var(--text-dark); margin-top:1px;">${preferredPharm.name}</div>
+            <div style="font-size:12px; color:var(--text-secondary);">${preferredPharm.address}</div>
+          </div>
+        </div>
+        <button onclick="openPharmacyPicker()" style="font-size:12px; font-weight:700; color:var(--s2b-teal); background:none; border:none; cursor:pointer; text-decoration:underline;">Change</button>
+      </div>
+
+      <!-- ACTIVE PRESCRIPTIONS SECTION -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <div style="font-size:14px; font-weight:800; color:var(--text-dark); text-transform:uppercase; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--s2b-teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5L3.5 13.5a5 5 0 1 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>
+          Active Prescriptions
+        </div>
+        <span style="font-size:12px; color:var(--text-muted); font-weight:600;">${state.prescriptions.length} Active</span>
+      </div>
+
+      <!-- Prescription Cards -->
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px;">
+        ${state.prescriptions.map(rx => {
+          let cardBorderClass = 'normal';
+          let badgeColorClass = 'var(--s2b-success)';
+          let badgeBg = 'var(--s2b-success-bg, #f0fdf4)';
+          let badgeBorder = '#bbf7d0';
+          let badgeText = 'Normal Supply';
+          let badgeIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+          let qtyColor = 'var(--text-dark)';
+          let qtyBg = 'var(--surface-base)';
+
+          if (rx.conditionStatus === 'urgent') {
+            cardBorderClass = 'urgent';
+            badgeColorClass = 'var(--s2b-urgent)';
+            badgeBg = 'var(--s2b-urgent-bg, #fff5f5)';
+            badgeBorder = '#fecaca';
+            badgeText = 'Refill Needed';
+            badgeIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+            qtyColor = 'var(--s2b-urgent)';
+            qtyBg = '#fff5f5';
+          } else if (rx.conditionStatus === 'low') {
+            cardBorderClass = 'low';
+            badgeColorClass = 'var(--s2b-attention, #d97706)';
+            badgeBg = 'var(--s2b-attention-bg, #fffbeb)';
+            badgeBorder = '#fde68a';
+            badgeText = 'Low Supply';
+            badgeIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+            qtyColor = '#b45309';
+            qtyBg = '#fffbeb';
+          }
+
+          return `
+          <div class="rx-card ${cardBorderClass}" style="background:var(--surface-card); border-radius:16px; padding:16px; box-shadow:var(--shadow-card); border:1px solid var(--border-light);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+              <div>
+                <div style="font-size:15px; font-weight:800; color:var(--text-dark); line-height:1.3;">${rx.name}</div>
+                <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">${rx.form}</div>
+              </div>
+              <div style="display:inline-flex; align-items:center; gap:5px; padding:4px 9px; border-radius:999px; background:${badgeBg}; color:${badgeColorClass}; border:1px solid ${badgeBorder}; font-size:11px; font-weight:700;">
+                ${badgeIcon}
+                <span>${badgeText}</span>
+              </div>
+            </div>
+
+            <!-- Quantitative Supply & Expiration Block -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; background:${qtyBg}; padding:10px 12px; border-radius:12px;">
+              <div>
+                <div style="font-size:10.5px; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:0.04em;">Remaining Quantity</div>
+                <div style="font-size:15px; font-weight:800; color:${qtyColor}; margin-top:2px;">${rx.remainingQty} ${rx.remainingUnit}</div>
+              </div>
+              <div>
+                <div style="font-size:10.5px; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:0.04em;">Expiration</div>
+                <div style="font-size:13.5px; font-weight:700; color:var(--text-dark); margin-top:2px;">Expires in ${rx.expiresInDays} days</div>
+                <div style="font-size:11px; color:var(--text-muted);">${rx.expiryDate}</div>
+              </div>
+            </div>
+
+            <!-- Doctor & Rx Metadata -->
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-secondary); margin-bottom:14px;">
+              <span><strong>Prescriber:</strong> ${rx.prescribedBy}</span>
+              <span style="font-family:monospace; font-size:11px; color:var(--text-muted);">${rx.rxNumber}</span>
+            </div>
+
+            <!-- Primary Action Button -->
+            <div>
+              <button onclick="startRefillRequest('${rx.id}')" class="btn ${rx.conditionStatus === 'urgent' ? 'btn-primary' : 'btn-secondary'}" style="width:100%; padding:11px 16px; font-size:13.5px; font-weight:700; border-radius:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Request Refill
+              </button>
+            </div>
+          </div>
+          `;
+        }).join('')}
+      </div>
+
+      <!-- REFILL REQUEST STATUS SECTION -->
+      <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-size:14px; font-weight:800; color:var(--text-dark); text-transform:uppercase; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--s2b-teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Refill Request Status
+        </div>
+        <span style="font-size:12px; color:var(--text-muted); font-weight:600;">${state.requests.length} Recent</span>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+        ${state.requests.map(req => {
+          let statusBadge = '';
+          if (req.status === 'pending') {
+            statusBadge = `<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:999px; background:#fef3c7; color:#92400e; border:1px solid #fde68a; font-size:11px; font-weight:700;"><span style="width:6px; height:6px; border-radius:50%; background:#d97706;"></span> Pending Review</span>`;
+          } else if (req.status === 'approved') {
+            statusBadge = `<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:999px; background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-size:11px; font-weight:700;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981;"></span> Approved</span>`;
+          } else if (req.status === 'denied') {
+            statusBadge = `<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:999px; background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; font-size:11px; font-weight:700;"><span style="width:6px; height:6px; border-radius:50%; background:#ef4444;"></span> Denied</span>`;
+          }
+
+          return `
+          <div class="card" style="background:var(--surface-card); border-radius:12px; padding:12px 14px; border:1px solid var(--border-light);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div>
+                <div style="font-size:14px; font-weight:800; color:var(--text-dark);">${req.medicationName}</div>
+                <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Requested: ${req.requestedDate} · ${req.pharmacyName}</div>
+              </div>
+              <div>${statusBadge}</div>
+            </div>
+            ${req.note ? `
+            <div style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border-light); font-size:12px; color:var(--text-secondary); display:flex; align-items:flex-start; gap:6px;">
+              <span style="font-weight:600; color:var(--text-muted);">Note:</span>
+              <span>${req.note}</span>
+            </div>
+            ` : ''}
+          </div>
+          `;
+        }).join('')}
+      </div>
+
+    </div>
+
+    <!-- MODAL: PHARMACY SELECTOR -->
+    ${state.activeModal === 'pharmacy-picker' ? `
+    <div class="refill-modal-backdrop" onclick="closeRefillModal()">
+      <div class="refill-modal-sheet" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div style="font-size:17px; font-weight:800; color:var(--s2b-blue);">Select Pharmacy</div>
+          <button onclick="closeRefillModal()" style="background:none; border:none; font-size:22px; color:var(--text-muted); cursor:pointer; line-height:1;">&times;</button>
+        </div>
+
+        <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:14px;">Select the preferred pharmacy for sending authorized refill prescriptions:</div>
+
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+          ${state.pharmacies.map(pharm => {
+            const isSelected = pharm.id === state.selectedPharmacyId;
+            return `
+            <div onclick="selectRefillPharmacy('${pharm.id}')" style="border:2px solid ${isSelected ? 'var(--s2b-teal)' : 'var(--border-light)'}; background:${isSelected ? 'var(--s2b-teal-light)' : 'var(--surface-card)'}; border-radius:14px; padding:12px 14px; cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:22px; height:22px; border-radius:50%; border:2px solid ${isSelected ? 'var(--s2b-teal)' : 'var(--border-mid)'}; display:flex; align-items:center; justify-content:center; background:${isSelected ? 'var(--s2b-teal)' : 'white'};">
+                  ${isSelected ? `<span style="width:8px; height:8px; border-radius:50%; background:white;"></span>` : ''}
+                </div>
+                <div>
+                  <div style="font-size:14px; font-weight:700; color:var(--text-dark);">${pharm.name}</div>
+                  <div style="font-size:12px; color:var(--text-secondary);">${pharm.address}, ${pharm.cityState}</div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Phone: ${pharm.phone} ${pharm.preferred ? '· <strong style="color:var(--s2b-teal-dark);">Preferred</strong>' : ''}</div>
+                </div>
+              </div>
+              ${isSelected ? `<span style="font-size:11px; font-weight:700; color:var(--s2b-teal-dark); background:white; padding:3px 8px; border-radius:999px;">Selected</span>` : ''}
+            </div>
+            `;
+          }).join('')}
+        </div>
+
+        <button onclick="closeRefillModal()" class="btn btn-secondary" style="width:100%; padding:11px; border-radius:12px;">Done</button>
+      </div>
+    </div>
+    ` : ''}
+
+    <!-- MODAL: ADD PRESCRIPTION -->
+    ${state.activeModal === 'add-rx' ? `
+    <div class="refill-modal-backdrop" onclick="closeRefillModal()">
+      <div class="refill-modal-sheet" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <div style="font-size:17px; font-weight:800; color:var(--s2b-blue);">Add Prescription</div>
+          <button onclick="closeRefillModal()" style="background:none; border:none; font-size:22px; color:var(--text-muted); cursor:pointer;">&times;</button>
+        </div>
+
+        <div style="font-size:12px; color:var(--text-secondary); margin-bottom:14px; line-height:1.45;">
+          Add a patient-managed prescription to monitor supplies and request refills. Note: Newly added medications will be verified by Dr. Sarah Chen's clinical team before prescription authorization.
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:4px;">Medication Name *</label>
+            <input id="new-rx-name" type="text" placeholder="e.g. Albuterol Inhaler 90mcg" class="input-field" style="width:100%; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:4px;">Form / Strength</label>
+            <input id="new-rx-form" type="text" placeholder="e.g. Inhaler · 200 Actuations" class="input-field" style="width:100%; box-sizing:border-box;">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div>
+              <label style="display:block; font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:4px;">Remaining Qty</label>
+              <input id="new-rx-qty" type="number" value="1" min="0" class="input-field" style="width:100%; box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block; font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:4px;">Est. Expiration</label>
+              <input id="new-rx-exp" type="text" placeholder="e.g. Dec 2026" class="input-field" style="width:100%; box-sizing:border-box;">
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button onclick="saveNewPrescription()" class="btn btn-primary" style="width:100%; padding:12px; font-size:13.5px; font-weight:700; border-radius:12px;">Save Prescription</button>
+          <button onclick="closeRefillModal()" class="btn btn-secondary" style="width:100%; padding:10px; font-size:13px; border-radius:12px;">Cancel</button>
+        </div>
+      </div>
+    </div>
+    ` : ''}
+
+    <div style="padding-bottom:80px;"></div>
+    ${patientNav('profile')}
+  </div>
+  `;
+};
+
+// ─────────────────────────────────────────────
+// SCREEN 2: PATIENT — REQUEST A REFILL
+// ─────────────────────────────────────────────
+SCREENS['patient-refill-request'] = () => {
+  const state = window.prescriptionsState;
+  const targetRx = state.prescriptions.find(p => p.id === state.targetRxId) || state.prescriptions[0];
+  const preferredPharm = state.pharmacies.find(p => p.id === state.selectedPharmacyId) || state.pharmacies[0];
+
+  return `
+  <div class="screen-full" style="background:var(--surface-base); min-height:780px;">
+    ${statusBar('var(--surface-base)')}
+
+    <!-- Header -->
+    <div class="mobile-header" style="background:var(--surface-base); border-bottom:1px solid var(--border-light); padding:12px 16px; display:flex; align-items:center; gap:10px;">
+      <button style="background:none; border:none; cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; color:var(--s2b-blue); flex-shrink:0;" onclick="showScreen('patient-prescriptions')" aria-label="Back to Prescriptions" id="refill-req-back-btn">
+        ${icon('arrow-left', 22, 'var(--s2b-blue)')}
+      </button>
+      <div>
+        <div class="header-title" style="font-size:17px; font-weight:800; color:var(--s2b-blue); line-height:1.2;">Request a Refill</div>
+        <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Review prescription details and submit to care team</div>
+      </div>
+    </div>
+
+    <div class="scrollable" style="padding:16px;">
+
+      <!-- Selected Prescription Card at the top -->
+      <div class="card" style="background:var(--surface-card); border-radius:16px; padding:16px; margin-bottom:18px; border:1.5px solid var(--border-light); box-shadow:var(--shadow-card);">
+        <div style="font-size:11px; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; color:var(--s2b-teal); margin-bottom:4px;">Selected Prescription</div>
+        <div style="font-size:16px; font-weight:800; color:var(--text-dark); line-height:1.3;">${targetRx.name}</div>
+        <div style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">${targetRx.form}</div>
+
+        <div style="display:flex; gap:14px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border-light); font-size:12px; color:var(--text-secondary);">
+          <div><strong>Remaining:</strong> <span style="color:${targetRx.remainingQty === 0 ? 'var(--s2b-urgent)' : 'var(--text-dark)'}; font-weight:700;">${targetRx.remainingQty} ${targetRx.remainingUnit}</span></div>
+          <div>·</div>
+          <div><strong>Expiration:</strong> Expires in ${targetRx.expiresInDays} days</div>
+          <div>·</div>
+          <div style="font-family:monospace;">${targetRx.rxNumber}</div>
+        </div>
+      </div>
+
+      <!-- PHARMACY SELECTION -->
+      <div style="margin-bottom:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <label style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-secondary);">Pharmacy</label>
+          <span style="font-size:11px; color:var(--s2b-teal); font-weight:600;">Routing Destination</span>
+        </div>
+
+        <div class="card" style="background:var(--surface-card); border:1.5px solid var(--border-light); border-radius:14px; padding:14px; display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px; height:40px; border-radius:10px; background:var(--s2b-teal-light); color:var(--s2b-teal-dark); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div>
+              <div style="font-size:11px; text-transform:uppercase; font-weight:700; color:var(--s2b-teal-dark); letter-spacing:0.04em;">Preferred Pharmacy</div>
+              <div style="font-size:14px; font-weight:700; color:var(--text-dark); margin-top:1px;">${preferredPharm.name}</div>
+              <div style="font-size:12px; color:var(--text-secondary);">${preferredPharm.address}</div>
+            </div>
+          </div>
+          <button onclick="openPharmacyPicker()" class="btn btn-secondary" style="font-size:11.5px; padding:6px 12px; border-radius:16px; font-weight:600;">Select Pharmacy</button>
+        </div>
+      </div>
+
+      <!-- NOTES FOR CARE TEAM (OPTIONAL) -->
+      <div style="margin-bottom:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <label for="refill-request-note" style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-secondary);">Note for Care Team (Optional)</label>
+          <span style="font-size:11px; color:var(--text-muted);">Optional</span>
+        </div>
+        <textarea id="refill-request-note" placeholder="Add a note about this refill request (e.g., I am almost out, need for school)" class="input-field" style="width:100%; height:75px; padding:12px; font-size:13px; resize:none; font-family:inherit; box-sizing:border-box; border-radius:12px; line-height:1.45;"></textarea>
+
+        <!-- Helpful Quick-fill chips -->
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;">
+          <button type="button" class="quick-note-chip" onclick="setRefillNoteChip('I am almost out of medication.')">I am almost out</button>
+          <button type="button" class="quick-note-chip" onclick="setRefillNoteChip('Please send this to my usual pharmacy.')">Send to usual pharmacy</button>
+          <button type="button" class="quick-note-chip" onclick="setRefillNoteChip('Need extra pack for school nurse kit.')">For school nurse kit</button>
+        </div>
+      </div>
+
+      <!-- Concise Confirmation Process Info -->
+      <div style="background:var(--s2b-teal-light); border:1px solid var(--s2b-teal-mid); border-radius:12px; padding:12px 14px; margin-bottom:24px; font-size:12px; color:var(--s2b-teal-dark); display:flex; gap:10px; line-height:1.45;">
+        <div style="flex-shrink:0; margin-top:1px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </div>
+        <div>
+          <strong>Care Team Review:</strong> Refill requests are authorized by <strong>Dr. Sarah Chen, Allergist</strong>, and automatically routed to <strong>${preferredPharm.name}</strong> upon approval.
+        </div>
+      </div>
+
+      <!-- Primary & Secondary Submission Buttons -->
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button onclick="submitRefillRequest('${targetRx.id}')" class="btn btn-primary" style="width:100%; padding:14px; font-size:14.5px; font-weight:800; border-radius:14px; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Refill Request
+        </button>
+        <button onclick="showScreen('patient-prescriptions')" class="btn btn-secondary" style="width:100%; padding:12px; font-size:13.5px; border-radius:14px;">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+
+    <!-- MODAL: PHARMACY SELECTOR -->
+    ${state.activeModal === 'pharmacy-picker' ? `
+    <div class="refill-modal-backdrop" onclick="closeRefillModal()">
+      <div class="refill-modal-sheet" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div style="font-size:17px; font-weight:800; color:var(--s2b-blue);">Select Pharmacy</div>
+          <button onclick="closeRefillModal()" style="background:none; border:none; font-size:22px; color:var(--text-muted); cursor:pointer; line-height:1;">&times;</button>
+        </div>
+
+        <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:14px;">Select the preferred pharmacy for sending authorized refill prescriptions:</div>
+
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+          ${state.pharmacies.map(pharm => {
+            const isSelected = pharm.id === state.selectedPharmacyId;
+            return `
+            <div onclick="selectRefillPharmacy('${pharm.id}')" style="border:2px solid ${isSelected ? 'var(--s2b-teal)' : 'var(--border-light)'}; background:${isSelected ? 'var(--s2b-teal-light)' : 'var(--surface-card)'}; border-radius:14px; padding:12px 14px; cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:22px; height:22px; border-radius:50%; border:2px solid ${isSelected ? 'var(--s2b-teal)' : 'var(--border-mid)'}; display:flex; align-items:center; justify-content:center; background:${isSelected ? 'var(--s2b-teal)' : 'white'};">
+                  ${isSelected ? `<span style="width:8px; height:8px; border-radius:50%; background:white;"></span>` : ''}
+                </div>
+                <div>
+                  <div style="font-size:14px; font-weight:700; color:var(--text-dark);">${pharm.name}</div>
+                  <div style="font-size:12px; color:var(--text-secondary);">${pharm.address}, ${pharm.cityState}</div>
+                  <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Phone: ${pharm.phone} ${pharm.preferred ? '· <strong style="color:var(--s2b-teal-dark);">Preferred</strong>' : ''}</div>
+                </div>
+              </div>
+              ${isSelected ? `<span style="font-size:11px; font-weight:700; color:var(--s2b-teal-dark); background:white; padding:3px 8px; border-radius:999px;">Selected</span>` : ''}
+            </div>
+            `;
+          }).join('')}
+        </div>
+
+        <button onclick="closeRefillModal()" class="btn btn-secondary" style="width:100%; padding:11px; border-radius:12px;">Done</button>
+      </div>
+    </div>
+    ` : ''}
+
+    <div style="padding-bottom:80px;"></div>
+    ${patientNav('profile')}
+  </div>
+  `;
+};
+
+// ─────────────────────────────────────────────
+// SCREEN 3: PATIENT — REFILL REQUEST SENT (SUCCESS)
+// ─────────────────────────────────────────────
+SCREENS['patient-refill-success'] = () => {
+  const state = window.prescriptionsState;
+  const lastReq = state.lastSubmittedRequest || {
+    medicationName: 'Epinephrine Auto-Injector 0.3mg',
+    pharmacyName: 'ABC Pharmacy',
+    requestedDate: 'Just now',
+    status: 'pending'
+  };
+
+  return `
+  <div class="screen-full" style="background:var(--surface-base); min-height:780px;">
+    ${statusBar('var(--surface-base)')}
+
+    <!-- Header -->
+    <div class="mobile-header" style="background:var(--surface-base); border-bottom:1px solid var(--border-light); padding:12px 16px; display:flex; align-items:center; gap:10px;">
+      <button style="background:none; border:none; cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; color:var(--s2b-blue); flex-shrink:0;" onclick="showScreen('patient-prescriptions')" aria-label="Back to Prescriptions" id="refill-success-back-btn">
+        ${icon('arrow-left', 22, 'var(--s2b-blue)')}
+      </button>
+      <div class="header-title" style="font-size:17px; font-weight:800; color:var(--s2b-blue); line-height:1.2;">Refill Request Sent</div>
+    </div>
+
+    <div class="scrollable" style="padding:32px 20px; text-align:center;">
+
+      <!-- Success Check Icon Ring -->
+      <div style="width:76px; height:76px; border-radius:50%; background:var(--s2b-success-bg, #ecfdf5); border:3px solid var(--s2b-success); color:var(--s2b-success); display:inline-flex; align-items:center; justify-content:center; margin-bottom:18px; animation:success-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+
+      <div style="font-size:22px; font-weight:800; color:var(--s2b-blue); margin-bottom:8px;">Refill Request Sent</div>
+      <div style="font-size:13.5px; color:var(--text-secondary); line-height:1.55; max-width:280px; margin:0 auto 24px;">
+        Your refill request has been sent to your care team for review and authorization.
+      </div>
+
+      <!-- Confirmation Details Card -->
+      <div class="card" style="background:var(--surface-card); border-radius:16px; padding:16px; text-align:left; margin-bottom:24px; border:1px solid var(--border-light); box-shadow:var(--shadow-card);">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+          <span style="color:var(--text-muted);">Prescription:</span>
+          <span style="font-weight:700; color:var(--text-dark);">${lastReq.medicationName}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+          <span style="color:var(--text-muted);">Pharmacy:</span>
+          <span style="font-weight:600; color:var(--text-dark);">${lastReq.pharmacyName}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+          <span style="color:var(--text-muted);">Status:</span>
+          <span style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:999px; background:#fef3c7; color:#92400e; border:1px solid #fde68a; font-size:11px; font-weight:700;">
+            <span style="width:6px; height:6px; border-radius:50%; background:#d97706;"></span> Pending Care Team Review
+          </span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:13px; padding-top:10px; border-top:1px solid var(--border-light);">
+          <span style="color:var(--text-muted);">Submitted:</span>
+          <span style="font-weight:600; color:var(--text-secondary);">${lastReq.requestedDate}</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(0,165,187,0.06); border-radius:12px; padding:12px; margin-bottom:28px; font-size:12px; color:var(--text-secondary); line-height:1.5;">
+        You will receive a notification once Dr. Sarah Chen authorizes the refill and routes it to ${lastReq.pharmacyName}.
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button onclick="showScreen('patient-prescriptions')" class="btn btn-primary" style="width:100%; padding:13px; font-size:14px; font-weight:800; border-radius:12px;">
+          View Prescription Refills
+        </button>
+        <button onclick="showScreen('patient-today')" class="btn btn-secondary" style="width:100%; padding:11px; font-size:13px; border-radius:12px;">
+          Back to Today's Doses
+        </button>
+      </div>
+
+    </div>
+    <div style="padding-bottom:80px;"></div>
+    ${patientNav('profile')}
+  </div>
+  `;
+};
+
+SCREENS['patient-prescription-refills'] = SCREENS['patient-prescriptions'];
+
+// ─────────────────────────────────────────────
+// SCREEN DETAILS (INFO REGISTRY)
+// ─────────────────────────────────────────────
+INFO['patient-prescriptions'] = {
+  screen: 'Prescription Refills',
+  role: 'patient',
+  desc: 'Dedicated prescription management and refill screen in the patient flow. Patients can manage active prescriptions, see remaining medication quantities and expiration dates, select pharmacies, and submit refill requests.',
+  ia: [
+    { title: 'Active Prescriptions', body: 'Lists all active prescriptions with current quantity, expiration countdown, prescriber details, and refill CTA.' },
+    { title: 'Semantic Supply Status', body: 'Visual status badges: Normal (Green), Low supply / Expiring soon (Amber), Refill Needed / 0 remaining (Red).' },
+    { title: 'Preferred Pharmacy', body: 'Displays designated preferred pharmacy (ABC Pharmacy) with direct selector to change.' },
+    { title: 'Refill Request Status', body: 'Tracks submitted refill requests with Pending, Approved, and Denied statuses.' },
+    { title: 'Add Prescription', body: 'Supports logging patient-reported medications with clear care-team verification distinction.' }
+  ],
+  notes: 'Maintains clear separation from Today\'s Doses. Accessible via Profile > Medications & Prescriptions and contextual low-supply shortcuts.'
+};
+INFO['patient-prescriptions'].title = INFO['patient-prescriptions'].screen;
+
+INFO['patient-prescription-refills'] = INFO['patient-prescriptions'];
+
+INFO['patient-refill-request'] = {
+  screen: 'Request a Refill',
+  role: 'patient',
+  desc: 'Dedicated refill request form screen in the patient flow. Allows the patient to select their pharmacy, write an optional note to the care team, review details, and send the request.',
+  ia: [
+    { title: 'Prescription Summary', body: 'Displays the selected medication, remaining quantity, and days until expiration.' },
+    { title: 'Pharmacy Selection', body: 'Allows patient to choose or switch among preferred and saved pharmacies.' },
+    { title: 'Care Team Notes', body: 'Optional note input with quick-fill chips for common patient refill reasons.' },
+    { title: 'Routing Confirmation', body: 'Clearly communicates that Dr. Sarah Chen\'s clinical team will authorize and route the order.' },
+    { title: 'Send Refill Request', body: 'Primary CTA that submits the request and transitions to the success screen.' }
+  ],
+  notes: 'Straightforward form designed for mobile patients. Accessible from Active Prescriptions or contextual dose alerts.'
+};
+INFO['patient-refill-request'].title = INFO['patient-refill-request'].screen;
+
+INFO['patient-refill-success'] = {
+  screen: 'Refill Request Sent',
+  role: 'patient',
+  desc: 'Dedicated confirmation screen displayed immediately after submitting a refill request. Confirms submission, shows pending status, and provides return navigation.',
+  ia: [
+    { title: 'Submission Confirmation', body: 'Calm and clear reassurance that the request was delivered to the care team.' },
+    { title: 'Pending Status Badge', body: 'Explicitly labels status as Pending Care Team Review so patient knows medication is not yet filled.' },
+    { title: 'Order Details Summary', body: 'Recaps medication, chosen pharmacy, and timestamp.' },
+    { title: 'Return Options', body: 'Direct navigation buttons to return to Prescription Refills or Today\'s Doses.' }
+  ],
+  notes: 'Does not imply immediate prescription fulfillment. Keeps communication transparent and reassuring.'
+};
+INFO['patient-refill-success'].title = INFO['patient-refill-success'].screen;
 
 // ─────────────────────────────────────────────
 // SCREEN: CAREGIVER — HOME (My Patients)
@@ -2735,6 +4178,195 @@ INFO['user-flows'] = {
 // ═══════════════════════════════════════════════════════════
 
 // ─────────────────────────────────────────────
+// AUTH STATE & HELPERS (PASS 1 REFINEMENT)
+// ─────────────────────────────────────────────
+const authState = {
+  phone: '(555) 012-3456',
+  countryCode: '+1',
+  countryFlag: '🇺🇸',
+  countries: [
+    { code: '+1', flag: '🇺🇸', name: 'United States' },
+    { code: '+44', flag: '🇬🇧', name: 'United Kingdom' },
+    { code: '+61', flag: '🇦🇺', name: 'Australia' },
+    { code: '+49', flag: '🇩🇪', name: 'Germany' },
+    { code: '+91', flag: '🇮🇳', name: 'India' }
+  ],
+  countryIndex: 0,
+  otpDigits: ['4', '2', '8', '', '', ''],
+  otpCountdown: 45,
+  timerInterval: null
+};
+
+function renderOtpBoxes(digits = authState.otpDigits, hasError = false) {
+  return `
+    <div class="otp-row" role="group" aria-label="Verification code input">
+      ${digits.map((d, i) => {
+        let cls = 'otp-box';
+        if (hasError) cls += ' error-box';
+        else if (d) cls += ' filled';
+        else if (i === digits.findIndex(x => !x)) cls += ' active-box';
+        return `<div class="${cls}" id="otp-digit-${i}" aria-label="Digit ${i+1}">${d}</div>`;
+      }).join('')}
+    </div>`;
+}
+
+function handleSocialAuth(provider, context = 'login') {
+  const accounts = {
+    Google: { name: 'Alex Johnson', email: 'alex.johnson@gmail.com' },
+    Apple: { name: 'Alex Johnson', email: 'alex.j@icloud.com' },
+    Instagram: { name: 'alex.johnson', email: 'alex@instagram-user.com' }
+  };
+  const acct = accounts[provider] || { name: 'Alex Johnson', email: 'alex@email.com' };
+  
+  if (context === 'signup') {
+    const container = document.getElementById('phone-screen');
+    if (container) {
+      const toast = document.createElement('div');
+      toast.className = 'social-prefill-card';
+      toast.innerHTML = `
+        <div class="social-prefill-avatar">${acct.name.charAt(0)}</div>
+        <div style="flex:1;">
+          <div style="font-size:12px; font-weight:700; color:#166534;">Connected with ${provider}</div>
+          <div style="font-size:11px; color:#15803d;">Using basic info: ${acct.name} (${acct.email})</div>
+        </div>
+      `;
+      const header = container.querySelector('.auth-header');
+      if (header && header.parentNode) {
+        header.parentNode.insertBefore(toast, header.nextSibling);
+      }
+    }
+    setTimeout(() => {
+      showScreen('phone-verify');
+    }, 900);
+  } else {
+    showScreen('patient-today');
+  }
+}
+
+function toggleEmailLoginCard() {
+  const form = document.getElementById('email-login-container');
+  if (form) {
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+function cycleCountryCode(screen = 'signup') {
+  authState.countryIndex = (authState.countryIndex + 1) % authState.countries.length;
+  const current = authState.countries[authState.countryIndex];
+  authState.countryCode = current.code;
+  authState.countryFlag = current.flag;
+
+  if (screen === 'verify') {
+    const flagEl = document.getElementById('verify-country-flag');
+    const codeEl = document.getElementById('verify-country-code');
+    if (flagEl) flagEl.textContent = current.flag;
+    if (codeEl) codeEl.textContent = current.code;
+  } else {
+    const flagEl = document.getElementById('signup-country-flag');
+    const codeEl = document.getElementById('signup-country-code');
+    if (flagEl) flagEl.textContent = current.flag;
+    if (codeEl) codeEl.textContent = current.code;
+  }
+}
+
+function proceedToPhoneVerify() {
+  const input = document.getElementById('ca-phone-number');
+  if (input && input.value.trim()) {
+    authState.phone = input.value.trim();
+  }
+  showScreen('phone-verify');
+}
+
+function toggleChangePhoneCard() {
+  const drawer = document.getElementById('change-phone-drawer');
+  if (drawer) {
+    const isHidden = drawer.style.display === 'none';
+    drawer.style.display = isHidden ? 'block' : 'none';
+    if (isHidden) {
+      const inp = document.getElementById('verify-change-phone-input');
+      if (inp) inp.focus();
+    }
+  }
+}
+
+function saveChangedPhone() {
+  const inp = document.getElementById('verify-change-phone-input');
+  if (inp && inp.value.trim()) {
+    authState.phone = inp.value.trim();
+  }
+  toggleChangePhoneCard();
+  const display = document.getElementById('phone-number-display');
+  if (display) {
+    display.innerHTML = `
+      <span style="margin-right:4px;">${authState.countryFlag}</span>
+      <span>${authState.countryCode}</span>
+      <span style="margin-left:4px;">${authState.phone}</span>
+    `;
+  }
+  resendPhoneOtp();
+}
+
+function startOtpTimer(seconds = 45) {
+  if (authState.timerInterval) {
+    clearInterval(authState.timerInterval);
+  }
+  authState.otpCountdown = seconds;
+  
+  authState.timerInterval = setInterval(() => {
+    authState.otpCountdown--;
+    const secEl = document.getElementById('timer-sec');
+    const timerText = document.getElementById('otp-timer-text');
+    const pill = document.getElementById('otp-timer-display');
+    const resendBtn = document.getElementById('resend-sms-btn');
+
+    if (authState.otpCountdown <= 0) {
+      clearInterval(authState.timerInterval);
+      authState.timerInterval = null;
+      if (timerText) timerText.textContent = 'Code expired — request a new one';
+      if (pill) pill.classList.add('expired');
+      if (resendBtn) resendBtn.style.opacity = '1';
+    } else {
+      if (secEl) secEl.textContent = authState.otpCountdown + 's';
+    }
+  }, 1000);
+}
+
+function resendPhoneOtp() {
+  authState.otpDigits = ['', '', '', '', '', ''];
+  startOtpTimer(45);
+  const container = document.getElementById('otp-container');
+  if (container) {
+    container.innerHTML = renderOtpBoxes(['', '', '', '', '', '']);
+  }
+  const timerText = document.getElementById('otp-timer-text');
+  const pill = document.getElementById('otp-timer-display');
+  const resendBtn = document.getElementById('resend-sms-btn');
+  if (timerText) timerText.innerHTML = `Resend code in <strong id="timer-sec">45s</strong>`;
+  if (pill) pill.classList.remove('expired');
+  if (resendBtn) resendBtn.style.opacity = '0.6';
+
+  const card = document.getElementById('phone-display-card');
+  if (card && card.parentNode) {
+    const existingAlert = document.getElementById('otp-sent-banner');
+    if (existingAlert) existingAlert.remove();
+    const alert = document.createElement('div');
+    alert.id = 'otp-sent-banner';
+    alert.style.cssText = 'background:#ecfdf5; border:1px solid #6ee7b7; color:#065f46; font-size:12px; font-weight:600; padding:8px 12px; border-radius:8px; margin-bottom:12px; text-align:center; animation:fadeIn 0.2s ease;';
+    alert.textContent = `New 6-digit code sent to ${authState.countryCode} ${authState.phone}`;
+    card.parentNode.insertBefore(alert, card);
+    setTimeout(() => alert && alert.remove(), 3500);
+  }
+}
+
+function fillDemoOtpCode() {
+  authState.otpDigits = ['4', '2', '8', '9', '1', '0'];
+  const container = document.getElementById('otp-container');
+  if (container) {
+    container.innerHTML = renderOtpBoxes(authState.otpDigits);
+  }
+}
+
+// ─────────────────────────────────────────────
 // HELPER: Step progress indicator
 // ─────────────────────────────────────────────
 function stepProgress(current, total) {
@@ -2777,79 +4409,74 @@ SCREENS['create-account'] = () => `
         ${icon('arrow-left', 18, 'var(--s2b-teal)')} Back
       </button>
     </div>
-    <div style="flex:1; overflow-y:auto; scrollbar-width:none; padding:0 28px 40px;">
-      <div class="auth-header">
+    <div style="flex:1; overflow-y:auto; scrollbar-width:none; padding:0 24px 36px;">
+      <div class="auth-header" style="padding:8px 0 18px;">
         <div class="auth-icon-wrap teal">${icon('user-plus', 28, 'var(--s2b-teal)')}</div>
         <div class="auth-title">Create Your Account</div>
-        <div class="auth-subtitle">Create an account to securely manage your allergy care.</div>
+        <div class="auth-subtitle">Fast sign-up with minimal manual entry. We fetch basic info directly from your provider.</div>
       </div>
-      <div class="security-notice">
+
+      <!-- Healthcare Privacy / Data Minimization Notice -->
+      <div class="security-notice" style="margin-bottom:18px;">
         <div style="flex-shrink:0; margin-top:1px;">${icon('shield-check', 16, 'var(--s2b-teal)')}</div>
-        <div class="security-notice-text"><strong>Secure &amp; Private</strong>Your information is encrypted and only shared with your authorized care team.</div>
-      </div>
-      <div class="input-group">
-        <label class="input-label" for="ca-fname">First Name</label>
-        <div class="input-icon-wrap">
-          <span class="input-icon-left">${icon('user', 16, 'var(--text-muted)')}</span>
-          <input id="ca-fname" class="input-field" type="text" placeholder="First name" aria-label="First Name" />
+        <div class="security-notice-text">
+          <strong>Healthcare Privacy &amp; Data Minimization</strong><br>
+          Only basic identity is requested to establish your account. No clinical or medical information is requested at registration.
         </div>
       </div>
-      <div class="input-group">
-        <label class="input-label" for="ca-lname">Last Name</label>
-        <div class="input-icon-wrap">
-          <span class="input-icon-left">${icon('user', 16, 'var(--text-muted)')}</span>
-          <input id="ca-lname" class="input-field" type="text" placeholder="Last name" aria-label="Last Name" />
+
+      <!-- Social Fast Registration Buttons -->
+      <div class="btn-social-stack" role="group" aria-label="Quick sign up options">
+        <button class="btn-social btn-google" onclick="handleSocialAuth('Google', 'signup')" id="signup-google-btn" aria-label="Continue with Google">
+          <span class="btn-social-icon">${icon('google', 20)}</span>
+          <span class="btn-social-label">Continue with Google</span>
+        </button>
+
+        <button class="btn-social btn-apple" onclick="handleSocialAuth('Apple', 'signup')" id="signup-apple-btn" aria-label="Continue with Apple">
+          <span class="btn-social-icon">${icon('apple', 20, '#fff')}</span>
+          <span class="btn-social-label">Continue with Apple</span>
+        </button>
+
+        <button class="btn-social btn-instagram" onclick="handleSocialAuth('Instagram', 'signup')" id="signup-instagram-btn" aria-label="Continue with Instagram">
+          <span class="btn-social-icon" style="color:#d62976;">${icon('instagram', 20, '#d62976')}</span>
+          <span class="btn-social-label">Continue with Instagram</span>
+        </button>
+      </div>
+
+      <div class="text-divider" style="margin:18px 0;">
+        <div class="text-divider-line"></div>
+        <span class="text-divider-label">or sign up with phone or email</span>
+        <div class="text-divider-line"></div>
+      </div>
+
+      <!-- Streamlined Manual Registration (Minimal data: Phone or Email) -->
+      <div class="phone-entry-group">
+        <label class="input-label" for="ca-phone-number">Mobile Phone (for secure SMS OTP)</label>
+        <div class="phone-entry-row">
+          <div class="country-code-picker" onclick="cycleCountryCode('signup')" title="Click to switch country code" id="signup-country-code-badge">
+            <span id="signup-country-flag">${authState.countryFlag}</span>
+            <span id="signup-country-code">${authState.countryCode}</span>
+            ${icon('chevron', 12, 'var(--text-muted)')}
+          </div>
+          <input id="ca-phone-number" class="input-field phone-input-main" type="tel" placeholder="(555) 000-0000" value="${authState.phone}" aria-label="Mobile Phone" oninput="authState.phone=this.value" />
         </div>
       </div>
-      <div class="input-group">
-        <label class="input-label" for="ca-email">Email Address</label>
+
+      <div class="input-group" style="margin-bottom:18px;">
+        <label class="input-label" for="ca-email">Email Address <span style="font-weight:400; color:var(--text-muted);">(Optional backup)</span></label>
         <div class="input-icon-wrap">
           <span class="input-icon-left">${icon('mail', 16, 'var(--text-muted)')}</span>
           <input id="ca-email" class="input-field" type="email" placeholder="your@email.com" aria-label="Email Address" />
         </div>
       </div>
-      <div class="input-group">
-        <label class="input-label" for="ca-phone">Mobile Phone</label>
-        <div class="input-icon-wrap">
-          <span class="input-icon-left">${icon('phone', 16, 'var(--text-muted)')}</span>
-          <input id="ca-phone" class="input-field" type="tel" placeholder="(555) 000-0000" aria-label="Mobile Phone" />
-        </div>
+
+      <div style="margin-bottom:20px;">
+        <button class="btn btn-primary" onclick="proceedToPhoneVerify()" id="create-account-btn">Continue to Phone Verification →</button>
       </div>
-      <div class="input-group">
-        <label class="input-label" for="ca-pw">Password</label>
-        <div class="input-icon-wrap">
-          <span class="input-icon-left">${icon('lock', 16, 'var(--text-muted)')}</span>
-          <input id="ca-pw" class="input-field" type="password" placeholder="Create a password" aria-label="Password" style="padding-right:44px;" />
-          <button class="input-icon-right" aria-label="Show password">${icon('eye', 16, 'var(--text-muted)')}</button>
-        </div>
-        <div class="pw-strength-row">
-          <div class="pw-strength-bar good"></div>
-          <div class="pw-strength-bar good"></div>
-          <div class="pw-strength-bar"></div>
-          <div class="pw-strength-bar"></div>
-        </div>
-        <div class="pw-strength-label good">Fair — add symbols for stronger</div>
-        <ul class="pw-req-list" aria-label="Password requirements">
-          <li class="pw-req-item met"><div class="pw-req-dot"></div> At least 8 characters</li>
-          <li class="pw-req-item met"><div class="pw-req-dot"></div> Uppercase and lowercase letters</li>
-          <li class="pw-req-item"><div class="pw-req-dot"></div> At least one number</li>
-          <li class="pw-req-item"><div class="pw-req-dot"></div> At least one symbol</li>
-        </ul>
-      </div>
-      <div class="input-group">
-        <label class="input-label" for="ca-cpw">Confirm Password</label>
-        <div class="input-icon-wrap">
-          <span class="input-icon-left">${icon('lock', 16, 'var(--text-muted)')}</span>
-          <input id="ca-cpw" class="input-field" type="password" placeholder="Repeat your password" aria-label="Confirm Password" style="padding-right:44px;" />
-          <button class="input-icon-right" aria-label="Show confirm password">${icon('eye', 16, 'var(--text-muted)')}</button>
-        </div>
-      </div>
-      <div style="margin-bottom:24px;">
-        <button class="btn btn-primary" onclick="showScreen('email-verify')" id="create-account-btn">Create Account</button>
-      </div>
+
       <div style="text-align:center;">
         <span style="font-size:13px; color:var(--text-secondary);">Already have an account? </span>
-        <span onclick="showScreen('login')" style="font-size:13px; color:var(--s2b-teal); font-weight:600; cursor:pointer;">Log In</span>
+        <span onclick="showScreen('login')" style="font-size:13px; color:var(--s2b-teal); font-weight:600; cursor:pointer;" id="link-login">Log In</span>
       </div>
     </div>
   </div>`;
@@ -2857,17 +4484,14 @@ SCREENS['create-account'] = () => `
 INFO['create-account'] = {
   screen: 'Create Account',
   role: 'system',
-  desc: 'New user registration. Collects name, email, phone and password. Password strength meter shows in real-time. Submitting goes to email verification.',
+  desc: 'Simplified account creation adhering to healthcare data minimization. Patients can sign up in 1 tap via Google, Apple, or Instagram with pre-filled basic account data, or register using mobile phone + country code.',
   ia: [
-    { title: 'First / Last Name', body: 'Identity fields' },
-    { title: 'Email Address', body: 'Login identifier, will be verified' },
-    { title: 'Mobile Phone', body: 'For optional SMS verification' },
-    { title: 'Password + Confirm', body: 'With strength indicator and requirements list' },
-    { title: 'Show Password', body: 'Eye icon toggle per field' },
-    { title: 'Create Account', body: 'Submits → Email Verification' },
-    { title: 'Log In', body: 'Existing users → Login screen' },
-  ],
-  notes: 'Security notice card reassures healthcare context. Password requirements shown inline, not in a modal. No clinical data collected here.'
+    { title: 'Social Sign-Up (Google, Apple, Instagram)', body: 'Zero manual data entry — automatically reuses verified provider credentials' },
+    { title: 'Data Minimization Notice', body: 'HIPAA & privacy statement confirming no premature clinical inquiries' },
+    { title: 'Phone Entry with Country Code', body: 'Country code picker (+1, +44, etc.) and mobile phone' },
+    { title: 'Continue to Phone Verification', body: 'Proceeds to 6-digit phone OTP verification' },
+    { title: 'Log In Link', body: 'Quick return for existing users' },
+  ]
 };
 
 // ─────────────────────────────────────────────
@@ -2881,40 +4505,42 @@ SCREENS['email-verify'] = () => `
         ${icon('arrow-left', 18, 'var(--s2b-teal)')} Back
       </button>
     </div>
-    <div style="flex:1; overflow-y:auto; scrollbar-width:none; padding:0 28px 40px;">
-      <div class="auth-header">
-        <div class="auth-icon-wrap teal">${icon('mail', 28, 'var(--s2b-teal)')}</div>
-        <div class="auth-title">Verify Your Email</div>
-        <div class="auth-subtitle">We sent a 6-digit code to<br><strong style="color:var(--s2b-blue);">alex@email.com</strong></div>
+    <div style="flex:1; overflow-y:auto; scrollbar-width:none; padding:0 24px 36px;">
+      <div class="auth-header" style="padding:16px 0 20px;">
+        <div class="auth-icon-wrap teal">${icon('phone-check', 28, 'var(--s2b-teal)')}</div>
+        <div class="auth-title">Phone-Based Verification</div>
+        <div class="auth-subtitle">Safe2Bite uses direct Phone SMS OTP rather than email verification to protect patient privacy and clinical data.</div>
       </div>
-      ${otpBoxes(3)}
-      <div class="resend-row">
-        <span>Didn't receive the code?</span>
-        <button class="resend-link" id="resend-code-btn">${icon('refresh', 14, 'var(--s2b-teal)')} Resend Code</button>
+
+      <div style="padding:16px; background:var(--s2b-teal-light); border-radius:var(--radius-xl); border:1px solid var(--s2b-teal-mid); margin-bottom:24px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+          ${icon('shield-check', 20, 'var(--s2b-teal)')}
+          <div style="font-size:14px; font-weight:700; color:var(--s2b-teal-dark);">Direct Phone OTP Active</div>
+        </div>
+        <div style="font-size:13px; color:var(--s2b-teal-dark); line-height:1.6;">
+          Email OTP has been superseded by SMS Phone OTP for improved security, instant delivery, and zero spam-folder delays.
+        </div>
       </div>
-      <div style="text-align:center; margin-top:6px;">
-        <button onclick="showScreen('create-account')" class="resend-link" style="color:var(--text-secondary); font-size:12px;">${icon('edit', 12, 'var(--text-muted)')} Change Email Address</button>
+
+      <div style="margin-top:12px;">
+        <button class="btn btn-primary" onclick="showScreen('phone-verify')" id="redirect-phone-verify-btn">
+          Proceed to Phone Verification →
+        </button>
       </div>
-      <div style="margin-top:28px;">
-        <button class="btn btn-primary" onclick="showScreen('phone-verify')" id="verify-email-btn">Verify Email</button>
-      </div>
-      <div style="margin-top:12px; padding:12px 14px; background:var(--s2b-teal-light); border-radius:var(--radius-lg); display:flex; align-items:flex-start; gap:8px;">
-        ${icon('info', 14, 'var(--s2b-teal)')}
-        <div style="font-size:12px; color:var(--s2b-teal-dark); line-height:1.55;">Check your spam or junk folder if you don't see the email within a few minutes.</div>
+
+      <div style="text-align:center; margin-top:20px;">
+        <span onclick="showScreen('login')" style="font-size:13px; color:var(--s2b-teal); font-weight:600; cursor:pointer;">Back to Login</span>
       </div>
     </div>
   </div>`;
 
 INFO['email-verify'] = {
-  screen: 'Email Verification',
+  screen: 'Verification Protocol',
   role: 'system',
-  desc: 'Verifies the user\'s email address with a 6-digit code. OTP boxes show entered state. Resend and change email options available.',
+  desc: 'Notice explaining that email OTP has been replaced by phone-only OTP per healthcare data security standards. Redirects directly to phone verification.',
   ia: [
-    { title: 'OTP Box Row', body: '6 individual digit inputs — current digit highlighted' },
-    { title: 'Resend Code', body: 'Triggers new code send, button has cooldown in production' },
-    { title: 'Change Email', body: 'Returns to Create Account screen' },
-    { title: 'Verify Email', body: 'Validates code → Phone Verification (or Profile Setup if phone skipped)' },
-    { title: 'Info Notice', body: 'Spam folder reminder — helpful, non-alarming' },
+    { title: 'Security Protocol Notice', body: 'Explains phone-first OTP rationale' },
+    { title: 'Proceed to Phone Verification', body: 'Navigates immediately to phone-verify' },
   ]
 };
 
@@ -2925,47 +4551,101 @@ SCREENS['phone-verify'] = () => `
   <div class="auth-screen">
     ${statusBar('#fff')}
     <div class="auth-back-bar">
-      <button class="auth-back-btn" onclick="showScreen('email-verify')" aria-label="Back">
+      <button class="auth-back-btn" onclick="showScreen('create-account')" aria-label="Back">
         ${icon('arrow-left', 18, 'var(--s2b-teal)')} Back
       </button>
     </div>
-    <div style="flex:1; overflow-y:auto; scrollbar-width:none; padding:0 28px 40px;">
-      <div class="auth-header">
+    <div style="flex:1; overflow-y:auto; scrollbar-width:none; padding:0 24px 36px;">
+      <div class="auth-header" style="padding:8px 0 16px;">
         <div class="auth-icon-wrap teal">${icon('phone-check', 28, 'var(--s2b-teal)')}</div>
-        <div class="auth-title">Verify Your Mobile Number</div>
-        <div class="auth-subtitle">Enter the code sent to<br><strong style="color:var(--s2b-blue);">(555) 012-3456</strong></div>
+        <div class="auth-title">Verify Phone Number</div>
+        <div class="auth-subtitle">Enter the 6-digit verification code sent via SMS to your mobile phone.</div>
       </div>
-      ${otpBoxes(4)}
-      <div class="resend-row">
-        <span>Didn't receive the code?</span>
-        <button class="resend-link" id="resend-sms-btn">${icon('refresh', 14, 'var(--s2b-teal)')} Resend Code</button>
+
+      <!-- Destination Phone Display with Country Code & Change Option -->
+      <div class="phone-destination-card" id="phone-display-card">
+        <div>
+          <div class="phone-destination-label">SMS SENT TO</div>
+          <div class="phone-destination-number" id="phone-number-display">
+            <span style="margin-right:4px;">${authState.countryFlag}</span>
+            <span>${authState.countryCode}</span>
+            <span style="margin-left:4px;">${authState.phone}</span>
+          </div>
+        </div>
+        <button class="btn-change-phone" onclick="toggleChangePhoneCard()" id="btn-change-phone-trigger" aria-label="Change Phone Number">
+          ${icon('edit', 12, 'currentColor')} Change
+        </button>
       </div>
-      <div style="text-align:center; margin-top:6px;">
-        <button onclick="showScreen('create-account')" class="resend-link" style="color:var(--text-secondary); font-size:12px;">${icon('edit', 12, 'var(--text-muted)')} Change Mobile Number</button>
+
+      <!-- Inline Change Phone Drawer -->
+      <div id="change-phone-drawer" style="display:none; background:var(--surface-card); border:2px solid var(--s2b-teal-mid); border-radius:var(--radius-lg); padding:14px; margin-bottom:18px; animation:fadeIn 0.2s ease;">
+        <div style="font-size:13px; font-weight:700; color:var(--s2b-blue); margin-bottom:8px;">Update Mobile Number</div>
+        <div class="phone-entry-row" style="margin-bottom:10px;">
+          <div class="country-code-picker" onclick="cycleCountryCode('verify')" id="verify-country-code-badge">
+            <span id="verify-country-flag">${authState.countryFlag}</span>
+            <span id="verify-country-code">${authState.countryCode}</span>
+            ${icon('chevron', 12, 'var(--text-muted)')}
+          </div>
+          <input id="verify-change-phone-input" class="input-field phone-input-main" type="tel" value="${authState.phone}" placeholder="(555) 000-0000" aria-label="New Mobile Phone" />
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary" onclick="saveChangedPhone()" style="padding:8px 16px; font-size:13px; flex:1;">Save &amp; Resend Code</button>
+          <button class="btn btn-secondary" onclick="toggleChangePhoneCard()" style="padding:8px 14px; font-size:13px;">Cancel</button>
+        </div>
       </div>
-      <div style="margin-top:28px;">
-        <button class="btn btn-primary" onclick="showScreen('patient-profile-setup')" id="verify-phone-btn">Verify Mobile Number</button>
-        <button onclick="showScreen('patient-profile-setup')" class="btn btn-text" style="width:100%; margin-top:8px; color:var(--text-secondary);">Skip for Now</button>
+
+      <!-- 6-digit OTP Row -->
+      <div id="otp-container">
+        ${renderOtpBoxes(authState.otpDigits)}
       </div>
-      <div style="margin-top:16px; padding:12px 14px; background:var(--s2b-attention-bg); border-radius:var(--radius-lg); display:flex; align-items:flex-start; gap:8px; border:1px solid #ffe082;">
-        ${icon('info', 14, 'var(--s2b-attention)')}
-        <div style="font-size:12px; color:var(--s2b-warning); line-height:1.55;">Mobile verification may be required depending on your account configuration. Your care team will notify you if it is mandatory.</div>
+
+      <!-- Quick Fill Helper for Prototype Interaction -->
+      <div class="otp-quick-fill-hint" onclick="fillDemoOtpCode()" title="Click to autofill sample OTP for testing">
+        ${icon('check', 12, 'var(--s2b-teal)')} Click to autofill demo code <strong>(428910)</strong>
+      </div>
+
+      <!-- Countdown Timer and Resend Row -->
+      <div class="otp-timer-container">
+        <div id="otp-timer-display" class="otp-timer-pill ${authState.otpCountdown === 0 ? 'expired' : ''}">
+          ${icon('clock', 12, 'currentColor')}
+          <span id="otp-timer-text">${authState.otpCountdown > 0 ? `Resend code in <strong id="timer-sec">${authState.otpCountdown}s</strong>` : 'Code expired — request a new one'}</span>
+        </div>
+
+        <div class="resend-row" style="margin-top:4px;">
+          <span>Didn't receive the SMS?</span>
+          <button class="resend-link" id="resend-sms-btn" onclick="resendPhoneOtp()" ${authState.otpCountdown > 0 ? 'style="opacity:0.6;"' : ''}>
+            ${icon('refresh', 14, 'var(--s2b-teal)')} Resend OTP
+          </button>
+        </div>
+      </div>
+
+      <!-- Verification CTA -->
+      <div style="margin-top:24px;">
+        <button class="btn btn-primary" onclick="showScreen('patient-profile-setup')" id="verify-phone-btn">Verify &amp; Enter Safe2Bite</button>
+      </div>
+
+      <!-- Reassuring Security / HIPAA note -->
+      <div style="margin-top:20px; padding:12px 14px; background:var(--s2b-teal-light); border-radius:var(--radius-lg); display:flex; align-items:flex-start; gap:8px;">
+        <div style="flex-shrink:0; margin-top:2px;">${icon('shield-check', 14, 'var(--s2b-teal)')}</div>
+        <div style="font-size:12px; color:var(--s2b-teal-dark); line-height:1.55;">
+          Direct phone verification ensures your allergy treatment protocols and patient data remain strictly confidential.
+        </div>
       </div>
     </div>
   </div>`;
 
 INFO['phone-verify'] = {
-  screen: 'Mobile Phone Verification',
+  screen: 'Phone OTP Verification',
   role: 'system',
-  desc: 'Optional SMS verification step. Can be enabled/disabled by system configuration. Users can skip if not required.',
+  desc: 'Dedicated phone-only 6-digit OTP verification screen. Includes country code, phone number display, active countdown timer, resend OTP trigger, and inline change phone number capability.',
   ia: [
-    { title: 'OTP Boxes', body: 'Same pattern as email verification for consistency' },
-    { title: 'Resend / Change Number', body: 'Same pattern as email for predictability' },
-    { title: 'Verify Button', body: 'Validates → Patient Profile Setup' },
-    { title: 'Skip for Now', body: 'System-configurable — shown only if SMS is optional' },
-    { title: 'Configuration Notice', body: 'Transparent communication about requirement status' },
-  ],
-  notes: 'This screen is system-configurable. The skip option may be hidden if SMS verification is mandatory.'
+    { title: 'SMS Destination Card', body: 'Displays active country code and phone number' },
+    { title: 'Change Phone Option', body: 'Inline drawer allows editing country code and number without leaving the flow' },
+    { title: '6-digit OTP Entry', body: 'Visual 6-box input with tap-to-autofill demo capability' },
+    { title: 'Countdown Timer', body: 'Real-time countdown timer showing seconds until resend is active' },
+    { title: 'Resend OTP', body: 'Requests fresh SMS code and restarts timer' },
+    { title: 'Verify & Enter', body: 'Submits code and enters Safe2Bite app' },
+  ]
 };
 
 // ─────────────────────────────────────────────
@@ -3818,7 +5498,7 @@ SCREENS['error-invalid-code'] = () => `
   <div class="auth-screen">
     ${statusBar('#fff')}
     <div class="auth-back-bar">
-      <button class="auth-back-btn" onclick="showScreen('email-verify')" aria-label="Back">
+      <button class="auth-back-btn" onclick="showScreen('phone-verify')" aria-label="Back">
         ${icon('arrow-left', 18, 'var(--s2b-teal)')} Back
       </button>
     </div>
@@ -3826,7 +5506,7 @@ SCREENS['error-invalid-code'] = () => `
       <div class="auth-header">
         <div class="auth-icon-wrap" style="background:var(--s2b-urgent-bg);">${icon('x-circle', 28, 'var(--s2b-urgent)')}</div>
         <div class="auth-title">Verification Failed</div>
-        <div class="auth-subtitle">We sent a 6-digit code to<br><strong style="color:var(--s2b-blue);">alex@email.com</strong></div>
+        <div class="auth-subtitle">We sent a 6-digit code to<br><strong style="color:var(--s2b-blue);">${authState.countryCode} ${authState.phone}</strong></div>
       </div>
       ${otpBoxes(3, true)}
       <div style="text-align:center; margin-bottom:16px;">
@@ -3837,10 +5517,10 @@ SCREENS['error-invalid-code'] = () => `
       </div>
       <div class="resend-row">
         <span>Didn't receive the code?</span>
-        <button class="resend-link">${icon('refresh', 14, 'var(--s2b-teal)')} Resend Code</button>
+        <button class="resend-link" onclick="resendPhoneOtp(); showScreen('phone-verify');">${icon('refresh', 14, 'var(--s2b-teal)')} Resend Code</button>
       </div>
       <div style="margin-top:20px;">
-        <button class="btn btn-primary" onclick="showScreen('email-verify')" id="retry-code-btn">Try Again</button>
+        <button class="btn btn-primary" onclick="showScreen('phone-verify')" id="retry-code-btn">Try Again</button>
       </div>
     </div>
   </div>`;
@@ -3852,8 +5532,8 @@ INFO['error-invalid-code'] = {
   ia: [
     { title: 'Red OTP Boxes', body: 'All 6 boxes show error state together' },
     { title: 'Friendly Error', body: '"That code doesn\'t look right" — human language' },
-    { title: 'Resend Code', body: 'Easy recovery path' },
-    { title: 'Try Again', body: 'Clears boxes and restores to normal state in production' },
+    { title: 'Resend Code', body: 'Easy recovery path via SMS' },
+    { title: 'Try Again', body: 'Returns to Phone Verification screen' },
   ]
 };
 
@@ -4077,9 +5757,18 @@ function showScreen(id) {
   const navBtn = document.getElementById('nav-' + id);
   if (navBtn) navBtn.classList.add('active');
 
+  // Clear any active OTP timer if leaving phone-verify
+  if (id !== 'phone-verify' && authState.timerInterval) {
+    clearInterval(authState.timerInterval);
+    authState.timerInterval = null;
+  }
+
   // Render screen
   if (SCREENS[id]) {
     phoneScreen.innerHTML = SCREENS[id]();
+    if (id === 'phone-verify') {
+      startOtpTimer(45);
+    }
   } else {
     phoneScreen.innerHTML = `<div style="padding:80px 32px; text-align:center; color:var(--text-secondary);">
       <div style="font-size:48px; margin-bottom:16px;">🚧</div>
@@ -4122,6 +5811,27 @@ function showScreen(id) {
 
   // Update label
   screenLabel.textContent = info ? info.screen : id;
+
+  // Update screen tracking
+  currentScreenId = id;
+  if (typeof PATIENT_SOS_SCREENS !== 'undefined' && PATIENT_SOS_SCREENS.has(id)) {
+    previousPatientScreen = id;
+  }
+
+  // Manage persistent floating SOS button
+  if (typeof ensureFloatingSos === 'function') {
+    ensureFloatingSos();
+  }
+  const sosBtn = document.getElementById('floating-sos-btn');
+  if (sosBtn) {
+    if (typeof PATIENT_SOS_SCREENS !== 'undefined' && PATIENT_SOS_SCREENS.has(id)) {
+      sosBtn.style.display = 'flex';
+      sosBtn.classList.add('visible');
+    } else {
+      sosBtn.style.display = 'none';
+      sosBtn.classList.remove('visible');
+    }
+  }
 
   // Reset scroll
   phoneScreen.scrollTop = 0;
