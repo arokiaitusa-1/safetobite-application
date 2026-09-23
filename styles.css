@@ -3841,8 +3841,8 @@ body {
    ───────────────────────────────────────────── */
 .floating-sos-btn {
   position: absolute;
-  bottom: 74px;
-  right: 16px;
+  bottom: 145px;
+  right: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
